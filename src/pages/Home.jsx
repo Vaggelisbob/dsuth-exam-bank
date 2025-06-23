@@ -111,8 +111,8 @@ const Home = () => {
     <Box sx={{
       width: '100vw',
       minHeight: '100dvh',
-      background: 'linear-gradient(135deg, #e3eafc 0%, #f4f6f8 100%)',
-      py: { xs: 2, md: 6 },
+      background: 'linear-gradient(135deg, #e3f0ff 0%, #f9fbff 100%)',
+      py: 0,
       overflowX: 'hidden',
       px: 0,
     }}>
@@ -120,9 +120,9 @@ const Home = () => {
         disableGutters
         maxWidth="xl"
         sx={{
-          mt: { xs: 2, sm: 4 },
-          mb: { xs: 2, sm: 4 },
-          px: { xs: 2, sm: 4, md: 6, lg: 8 },
+          mt: 0,
+          mb: 0,
+          px: 0,
           width: '100vw',
           overflowX: 'hidden',
         }}
