@@ -114,7 +114,7 @@ const NavBar = () => {
                     onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }}
                     sx={{
                       color: 'grey.700',
-                      position: 'absolute', right: 14, top: 14, p: 1.2,
+                      position: 'absolute', right: 14, top: 5, p: 1.2,
                       '&:focus, &:focus-visible': { outline: 'none !important', boxShadow: 'none !important', border: 'none !important' }
                     }}
                   >
