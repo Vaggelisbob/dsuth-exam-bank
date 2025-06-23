@@ -162,12 +162,10 @@ const CourseFiles = () => {
                     href={file.file_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    startIcon={<VisibilityIcon />}
                     size="medium"
-                    fullWidth
-                    sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}
+                    sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                   >
-                    Προβολή
+                    <VisibilityIcon />
                   </Button>
                 </Tooltip>
                 <Tooltip title="Λήψη PDF">
@@ -177,25 +175,23 @@ const CourseFiles = () => {
                     href={file.file_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    startIcon={<DownloadIcon />}
                     size="medium"
-                    fullWidth
-                    sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}
+                    sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                   >
-                    Download
+                    <DownloadIcon />
                   </Button>
                 </Tooltip>
                 {user && user.id === ADMIN_UID && !file.approved && (
                   <Tooltip title="Έγκριση αρχείου">
-                    <Button variant="outlined" color="success" startIcon={<CheckIcon />} onClick={() => handleApprove(file.id)} size="medium" fullWidth sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}>
-                      Έγκριση
+                    <Button variant="outlined" color="success" onClick={() => handleApprove(file.id)} size="medium" sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <CheckIcon />
                     </Button>
                   </Tooltip>
                 )}
                 {user && user.id === ADMIN_UID && (
                   <Tooltip title="Διαγραφή αρχείου">
-                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(file.id, file.file_url)} size="medium" fullWidth sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}>
-                      Διαγραφή
+                    <Button variant="outlined" color="error" onClick={() => handleDelete(file.id, file.file_url)} size="medium" sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <DeleteIcon />
                     </Button>
                   </Tooltip>
                 )}
