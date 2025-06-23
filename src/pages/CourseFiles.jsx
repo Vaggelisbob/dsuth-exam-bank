@@ -108,13 +108,14 @@ const CourseFiles = () => {
                 backdropFilter: 'blur(6px)',
                 borderColor: file.approved ? theme.palette.primary.light : theme.palette.secondary.main,
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'stretch',
                 px: { xs: 1, sm: 2 },
                 transition: 'box-shadow 0.2s, transform 0.2s',
                 '&:hover': { boxShadow: '0 12px 32px 0 rgba(31,38,135,0.18)', transform: 'translateY(-2px) scale(1.01)' },
+                minHeight: 140,
               }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mr: { xs: 1, sm: 2 } }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mr: { xs: 1, sm: 2 }, py: 2, pr: 1, borderRight: '1.5px solid #e3eafc', minWidth: 70 }}>
                 <PictureAsPdfRoundedIcon color={file.approved ? 'primary' : 'warning'} sx={{ fontSize: 48, mb: 0.5 }} />
                 <Box sx={{ mt: 0.5 }}>
                   <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
@@ -122,7 +123,7 @@ const CourseFiles = () => {
                   </Typography>
                 </Box>
               </Box>
-              <CardContent sx={{ flex: 1, py: 2 }}>
+              <CardContent sx={{ flex: 1, py: 2, px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1.5px solid #e3eafc', minWidth: 0 }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} alignItems={{ sm: 'center' }} spacing={1} justifyContent="space-between">
                   <Box>
                     <Typography variant="subtitle1" fontWeight={700} sx={{ color: theme.palette.primary.dark }}>
@@ -154,7 +155,7 @@ const CourseFiles = () => {
                   </Box>
                 </Stack>
               </CardContent>
-              <CardActions sx={{ p: 2, flexDirection: 'column', gap: 1.2, minWidth: 120, justifyContent: 'center', alignItems: 'center' }}>
+              <CardActions sx={{ p: 2, flexDirection: 'column', gap: 1.2, minWidth: 90, justifyContent: 'center', alignItems: 'center', bgcolor: 'rgba(255,255,255,0.7)', borderRadius: 3, minHeight: 0 }}>
                 <Tooltip title="Προβολή PDF">
                   <Button
                     variant="outlined"
