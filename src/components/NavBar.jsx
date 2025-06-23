@@ -102,22 +102,24 @@ const NavBar = () => {
                 </Menu>
               </>
             ) : (
-              <IconButton
-                size="large"
-                edge="end"
-                color="inherit"
-                component={Link}
-                to="/login"
-                sx={{ mx: 1.5 }}
-              >
-                <LoginIcon />
-              </IconButton>
+              <>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  color="inherit"
+                  component={Link}
+                  to="/login"
+                  sx={{ mx: 1.5 }}
+                >
+                  <LoginIcon />
+                </IconButton>
+              </>
             )}
           </Toolbar>
         </AppBar>
       )}
       {/* Main NavBar */}
-      <AppBar position="static" color="primary" sx={{ mt: isMobile ? 6 : 0 }}>
+      <AppBar position="static" color="primary" sx={{ mt: isMobile ? theme.spacing(7) : 0, boxShadow: 0 }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" component={Link} to="/" sx={{ color: '#fff', textDecoration: 'none', flexGrow: { xs: 1, sm: 0 }, px: 2, py: 0.5, borderRadius: 1.5, transition: 'background 0.2s', cursor: 'pointer', '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' } }}>
             Τράπεζα Θεμάτων UTH
@@ -164,7 +166,7 @@ const NavBar = () => {
           </Box>
           {/* Mobile */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton color="inherit" edge="end" onClick={() => setMobileOpen(true)} sx={{ mx: 1.5 }}>
+            <IconButton color="inherit" edge="end" onClick={() => setMobileOpen(true)} sx={{ mx: 1.5, '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none', border: 'none' } }}>
               <MenuIcon />
             </IconButton>
             <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)}>
@@ -176,6 +178,7 @@ const NavBar = () => {
                 >
                   <CloseIcon sx={{ color: '#222' }} />
                 </IconButton>
+                <Box sx={{ height: 0, pb: theme => theme.spacing(3) }} />
                 <List>
                   <ListItem>
                     <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 600 }}>
@@ -185,17 +188,16 @@ const NavBar = () => {
                   <ListItemButton component={Link} to="/">
                     <ListItemText primary="ΑΡΧΙΚΗ" />
                   </ListItemButton>
-                  {menuItems.map((item, idx) => (
+                  {menuItems.filter(item => item.label !== 'Είσοδος').map((item, idx) => (
                     <ListItem key={idx} disablePadding>
                       {item.to ? (
-                        item.label === 'Είσοδος' ? null :
                         <ListItemButton component={Link} to={item.to}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Είσοδος' ? 'ΕΙΣΟΔΟΣ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
                         </ListItemButton>
                       ) : (
                         item.label === 'Αποσύνδεση' ? null :
                         <ListItemButton onClick={item.action}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'ΠΡΟΦΙΛ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Είσοδος' ? 'ΕΙΣΟΔΟΣ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
                         </ListItemButton>
                       )}
                     </ListItem>
