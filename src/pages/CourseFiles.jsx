@@ -100,18 +100,28 @@ const CourseFiles = () => {
               key={file.id}
               variant="outlined"
               sx={{
-                borderRadius: 3,
-                boxShadow: 2,
+                borderRadius: 4,
+                boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
                 background: file.approved
-                  ? `linear-gradient(90deg, ${theme.palette.background.paper} 60%, ${theme.palette.secondary.main}11 100%)`
-                  : `linear-gradient(90deg, #fffbe6 60%, #ffd20033 100%)`,
+                  ? 'linear-gradient(120deg, rgba(227,240,255,0.85) 60%, rgba(201,231,255,0.85) 100%)'
+                  : 'linear-gradient(120deg, #fffbe6cc 60%, #ffd20033 100%)',
+                backdropFilter: 'blur(6px)',
                 borderColor: file.approved ? theme.palette.primary.light : theme.palette.secondary.main,
                 display: 'flex',
                 alignItems: 'center',
-                px: 2,
+                px: { xs: 1, sm: 2 },
+                transition: 'box-shadow 0.2s, transform 0.2s',
+                '&:hover': { boxShadow: '0 12px 32px 0 rgba(31,38,135,0.18)', transform: 'translateY(-2px) scale(1.01)' },
               }}
             >
-              <PictureAsPdfRoundedIcon color={file.approved ? 'primary' : 'warning'} sx={{ fontSize: 48, mr: 2 }} />
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mr: { xs: 1, sm: 2 } }}>
+                <PictureAsPdfRoundedIcon color={file.approved ? 'primary' : 'warning'} sx={{ fontSize: 48, mb: 0.5 }} />
+                <Box sx={{ mt: 0.5 }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                    PDF
+                  </Typography>
+                </Box>
+              </Box>
               <CardContent sx={{ flex: 1, py: 2 }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} alignItems={{ sm: 'center' }} spacing={1} justifyContent="space-between">
                   <Box>
@@ -119,20 +129,32 @@ const CourseFiles = () => {
                       Έτος: {file.year} | Εξεταστική: {file.period}
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 0.5 }}>
-                      <Avatar sx={{ width: 28, height: 28, bgcolor: theme.palette.primary.main, fontSize: 16 }}>
+                      <Avatar sx={{ width: 28, height: 28, bgcolor: theme.palette.primary.main, fontSize: 16, boxShadow: 2 }}>
                         <PersonIcon fontSize="small" />
                       </Avatar>
-                      <Typography variant="body2" color="text.secondary">
+                      <Box sx={{ bgcolor: '#fff', px: 1.5, py: 0.5, borderRadius: 2, boxShadow: 1, ml: -1, fontWeight: 600, fontSize: 14, color: 'primary.main', border: '1px solid #e3f0ff' }}>
                         {uploaders[file.uploader] || file.uploader}
-                      </Typography>
+                      </Box>
                     </Stack>
                   </Box>
-                  <Typography variant="body2" color={file.approved ? 'success.main' : 'warning.main'} fontWeight={600} sx={{ mt: { xs: 1, sm: 0 } }}>
-                    {file.approved ? 'Εγκεκριμένο' : 'Αναμονή έγκρισης'}
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: { xs: 1, sm: 0 } }}>
+                    <Box sx={{
+                      bgcolor: file.approved ? 'success.main' : 'warning.main',
+                      color: '#fff',
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: 2,
+                      fontWeight: 700,
+                      fontSize: 13,
+                      letterSpacing: 0.5,
+                      boxShadow: 1,
+                    }}>
+                      {file.approved ? 'Εγκεκριμένο' : 'Αναμονή έγκρισης'}
+                    </Box>
+                  </Box>
                 </Stack>
               </CardContent>
-              <CardActions sx={{ p: 2, flexDirection: 'column', gap: 1, minWidth: 120, justifyContent: 'center', alignItems: 'center' }}>
+              <CardActions sx={{ p: 2, flexDirection: 'column', gap: 1.2, minWidth: 120, justifyContent: 'center', alignItems: 'center' }}>
                 <Tooltip title="Προβολή PDF">
                   <Button
                     variant="outlined"
@@ -141,9 +163,9 @@ const CourseFiles = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     startIcon={<VisibilityIcon />}
-                    size="small"
+                    size="medium"
                     fullWidth
-                    sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}
+                    sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}
                   >
                     Προβολή
                   </Button>
@@ -156,23 +178,23 @@ const CourseFiles = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     startIcon={<DownloadIcon />}
-                    size="small"
+                    size="medium"
                     fullWidth
-                    sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}
+                    sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}
                   >
                     Download
                   </Button>
                 </Tooltip>
                 {user && user.id === ADMIN_UID && !file.approved && (
                   <Tooltip title="Έγκριση αρχείου">
-                    <Button variant="outlined" color="success" startIcon={<CheckIcon />} onClick={() => handleApprove(file.id)} size="small" fullWidth sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}>
+                    <Button variant="outlined" color="success" startIcon={<CheckIcon />} onClick={() => handleApprove(file.id)} size="medium" fullWidth sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}>
                       Έγκριση
                     </Button>
                   </Tooltip>
                 )}
                 {user && user.id === ADMIN_UID && (
                   <Tooltip title="Διαγραφή αρχείου">
-                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(file.id, file.file_url)} size="small" fullWidth sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}>
+                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(file.id, file.file_url)} size="medium" fullWidth sx={{ minWidth: 140, fontWeight: 700, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0, borderRadius: 2, boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 } }}>
                       Διαγραφή
                     </Button>
                   </Tooltip>
