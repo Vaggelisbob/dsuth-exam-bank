@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -83,6 +84,7 @@ const NavBar = () => {
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <Button color="inherit" component={Link} to="/" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΑΡΧΙΚΗ</Button>
             <Button color="inherit" component={Link} to="/courses" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΜΑΘΗΜΑΤΑ</Button>
+            <Button color="inherit" component={Link} to="/favorites" startIcon={<FavoriteIcon />} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΑΓΑΠΗΜΕΝΑ</Button>
             <Button color="inherit" component={Link} to="/upload" sx={{ minWidth: 0, p: 1.2, '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>
               <UploadFileIcon />
             </Button>
@@ -263,6 +265,9 @@ const NavBar = () => {
                   </ListItemButton>
                   <ListItemButton component={Link} to="/courses" sx={{ justifyContent: 'center', textAlign: 'center' }}>
                     <ListItemText primary="ΜΑΘΗΜΑΤΑ" sx={{ textAlign: 'center' }} />
+                  </ListItemButton>
+                  <ListItemButton component={Link} to="/favorites" sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><FavoriteIcon color="error" /></ListItemIcon>
                   </ListItemButton>
                   {menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').map((item, idx) => (
                     <ListItem key={idx} disablePadding sx={{ justifyContent: 'center', display: 'flex' }}>

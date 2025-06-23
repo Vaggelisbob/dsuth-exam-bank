@@ -14,6 +14,7 @@ import AdminCourses from './pages/admin/AdminCourses';
 import Courses from './pages/Courses';
 import CourseFiles from './pages/CourseFiles';
 import Footer from './components/Footer';
+import Favorites from './pages/Favorites';
 
 const theme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/upload" element={<Upload />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/admin" element={<AdminDashboard />}>
             <Route path="files" element={<Suspense fallback={<div>Loading...</div>}><AdminFiles /></Suspense>} />
             <Route path="users" element={<Suspense fallback={<div>Loading...</div>}><AdminUsers /></Suspense>} />

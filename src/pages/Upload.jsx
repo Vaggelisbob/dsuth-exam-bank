@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Button, TextField, MenuItem, Alert, CircularProgress, Stack, Skeleton } from '@mui/material';
+import { Container, Typography, Box, Button, TextField, MenuItem, Alert, CircularProgress, Stack, Skeleton, IconButton, Tooltip, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const periods = [
   'Ιανουάριος',
@@ -15,6 +16,7 @@ const Upload = () => {
   const [course, setCourse] = useState('');
   const [year, setYear] = useState('');
   const [period, setPeriod] = useState('');
+  const [semester, setSemester] = useState('');
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -104,6 +106,10 @@ const Upload = () => {
     setLoading(false);
   };
 
+  const filteredCourses = semester
+    ? courses.filter((c) => c.semester === Number(semester))
+    : [];
+
   if (user === undefined || loading) return (
     <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
@@ -125,75 +131,122 @@ const Upload = () => {
   if (!user) return null;
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
-        ΑΝΕΒΑΣΜΑ ΑΡΧΕΙΟΥ ΕΞΕΤΑΣΗΣ
-      </Typography>
-      <Box component="form" onSubmit={handleUpload} sx={{ mt: 2 }}>
-        <Stack spacing={2} direction="column">
-          <TextField
-            label="ΜΑΘΗΜΑ"
-            select
-            fullWidth
-            value={course}
-            onChange={e => setCourse(e.target.value)}
-            disabled={coursesLoading}
-            helperText={coursesLoading ? 'Φόρτωση μαθημάτων...' : (courses.length === 0 ? 'Δεν υπάρχουν διαθέσιμα μαθήματα. Επικοινώνησε με τον διαχειριστή.' : '')}
-          >
-            {courses.map((c) => (
-              <MenuItem key={c.id} value={c.name}>{`${c.name} (Εξάμηνο ${c.semester})`}</MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="ΕΤΟΣ"
-            type="number"
-            fullWidth
-            value={year}
-            onChange={e => setYear(e.target.value)}
-          />
-          <TextField
-            label="ΕΞΕΤΑΣΤΙΚΗ"
-            select
-            fullWidth
-            value={period}
-            onChange={e => setPeriod(e.target.value)}
-          >
-            {periods.map((p) => (
-              <MenuItem key={p} value={p}>{p}</MenuItem>
-            ))}
-          </TextField>
-          <Button
-            variant="contained"
-            component="label"
-            sx={{ mt: 1, fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
-            fullWidth
-          >
-            ΕΠΙΛΟΓΗ ΑΡΧΕΙΟΥ
-            <input
-              type="file"
-              hidden
-              accept="application/pdf"
-              onChange={e => setFile(e.target.files[0])}
-            />
-          </Button>
-          {file && <Typography variant="body2" sx={{ mt: 1 }}>{file.name}</Typography>}
-          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-          {success && <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>}
-          <Box sx={{ mt: 2, position: 'relative' }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              fullWidth
-              sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
-            >
-              ΑΝΕΒΑΣΜΑ
-            </Button>
-            {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
+    <Container maxWidth="sm" sx={{ mt: 6, mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Card sx={{ width: '100%', maxWidth: 480, borderRadius: 4, boxShadow: 6, px: { xs: 1, sm: 3 }, py: 2, background: 'linear-gradient(135deg, #e3eafc 0%, #f4f6f8 100%)' }}>
+        <CardContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+            <Box sx={{
+              width: 72,
+              height: 72,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #1976d2 0%, #64b5f6 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 1.5,
+              boxShadow: 3
+            }}>
+              <UploadFileIcon sx={{ color: '#fff', fontSize: 40 }} />
+            </Box>
+            <Typography variant="h5" color="primary" fontWeight={700} gutterBottom align="center">
+              ΑΝΕΒΑΣΜΑ ΑΡΧΕΙΟΥ ΕΞΕΤΑΣΗΣ
+            </Typography>
+            <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 1 }}>
+              Συμπλήρωσε τα στοιχεία και ανέβασε το αρχείο σου (PDF, Word, PNG, JPG).
+            </Typography>
           </Box>
-        </Stack>
-      </Box>
+          <Box component="form" onSubmit={handleUpload} sx={{ mt: 1 }}>
+            <Stack spacing={2} direction="column">
+              <TextField
+                label="ΕΞΑΜΗΝΟ"
+                select
+                fullWidth
+                value={semester}
+                onChange={e => {
+                  setSemester(e.target.value);
+                  setCourse('');
+                }}
+              >
+                {[...Array(8)].map((_, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>{i + 1}ο Εξάμηνο</MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                label="ΜΑΘΗΜΑ"
+                select
+                fullWidth
+                value={course}
+                onChange={e => setCourse(e.target.value)}
+                disabled={coursesLoading || !semester}
+                helperText={
+                  coursesLoading
+                    ? 'Φόρτωση μαθημάτων...'
+                    : !semester
+                    ? 'Επίλεξε πρώτα εξάμηνο.'
+                    : filteredCourses.length === 0
+                    ? 'Δεν υπάρχουν διαθέσιμα μαθήματα για το εξάμηνο.'
+                    : ''
+                }
+              >
+                {filteredCourses.map((c) => (
+                  <MenuItem key={c.id} value={c.name}>{c.name}</MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                label="ΕΤΟΣ ΑΡΧΕΙΟΥ"
+                type="number"
+                fullWidth
+                value={year}
+                onChange={e => setYear(e.target.value)}
+              />
+              <TextField
+                label="ΕΞΕΤΑΣΤΙΚΗ"
+                select
+                fullWidth
+                value={period}
+                onChange={e => setPeriod(e.target.value)}
+              >
+                {periods.map((p) => (
+                  <MenuItem key={p} value={p}>{p}</MenuItem>
+                ))}
+              </TextField>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                <Tooltip title="Επιλογή αρχείου">
+                  <IconButton
+                    color="primary"
+                    component="label"
+                    sx={{ width: 56, height: 56, borderRadius: '50%', background: '#e3eafc', '&:hover': { background: '#d0e2ff' } }}
+                  >
+                    <UploadFileIcon sx={{ fontSize: 32 }} />
+                    <input
+                      type="file"
+                      hidden
+                      accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg"
+                      onChange={e => setFile(e.target.files[0])}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              {file && <Typography variant="body2" sx={{ mt: 1, textAlign: 'center' }}>{file.name}</Typography>}
+              {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+              {success && <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>}
+              <Box sx={{ mt: 2, position: 'relative' }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={loading}
+                  fullWidth
+                  sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1, borderRadius: 2, fontWeight: 700, boxShadow: 2 }}
+                >
+                  ΑΝΕΒΑΣΜΑ
+                </Button>
+                {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
+              </Box>
+            </Stack>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
   );
 };

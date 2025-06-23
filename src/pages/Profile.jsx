@@ -5,6 +5,9 @@ import { supabase } from '../supabaseClient';
 import MenuItem from '@mui/material/MenuItem';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -130,63 +133,115 @@ const Profile = () => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 6, mb: 4 }}>
-      <Card variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
-        <CardContent>
-          <Typography variant="h5" color="primary" gutterBottom>
+      <Card
+        variant="outlined"
+        sx={{
+          p: { xs: 2, sm: 3 },
+          borderRadius: 5,
+          boxShadow: 6,
+          background: 'linear-gradient(120deg, #e3eafc 60%, #f4f6f8 100%)',
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+          <Box sx={{ mb: 1 }}>
+            <Box sx={{
+              width: 80,
+              height: 80,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #1976d2 60%, #42a5f5 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: 3,
+            }}>
+              <PersonIcon sx={{ color: '#fff', fontSize: 48 }} />
+            </Box>
+          </Box>
+          <Typography variant="h5" color="primary" gutterBottom sx={{ fontWeight: 800, letterSpacing: '-1px', textAlign: 'center' }}>
             ΠΡΟΦΙΛ ΧΡΗΣΤΗ
           </Typography>
-          <Stack spacing={2}>
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1, textAlign: 'center' }}>
+            {user.email}
+          </Typography>
+        </Box>
+        <Stack spacing={2} sx={{ width: '100%' }}>
+          <TextField
+            label="ΟΝΟΜΑ"
+            name="first_name"
+            value={profile.first_name || ''}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <BadgeIcon color="primary" />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            label="ΕΠΩΝΥΜΟ"
+            name="last_name"
+            value={profile.last_name || ''}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <BadgeIcon color="primary" />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            label="Email"
+            value={user.email}
+            fullWidth
+            InputProps={{
+              readOnly: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon color="primary" />
+                </InputAdornment>
+              ),
+            }}
+          />
+          {user.id === ADMIN_UID ? (
             <TextField
-              label="ΟΝΟΜΑ"
-              name="first_name"
-              value={profile.first_name || ''}
+              select
+              label="ΡΟΛΟΣ"
+              name="role"
+              value={profile.role || 'student'}
               onChange={handleChange}
               fullWidth
-            />
+              helperText="Μόνο ο admin μπορεί να αλλάξει το ρόλο."
+            >
+              <MenuItem value="student">ΦΟΙΤΗΤΗΣ</MenuItem>
+              <MenuItem value="admin">ADMIN</MenuItem>
+            </TextField>
+          ) : (
             <TextField
-              label="ΕΠΩΝΥΜΟ"
-              name="last_name"
-              value={profile.last_name || ''}
-              onChange={handleChange}
-              fullWidth
-            />
-            <TextField
-              label="Email"
-              value={user.email}
+              label="ΡΟΛΟΣ"
+              value={profile.role || 'student'}
               fullWidth
               InputProps={{ readOnly: true }}
+              helperText={user.id === ADMIN_UID ? 'Μόνο ο admin μπορεί να αλλάξει το ρόλο.' : ''}
             />
-            {user.id === ADMIN_UID ? (
-              <TextField
-                select
-                label="ΡΟΛΟΣ"
-                name="role"
-                value={profile.role || 'student'}
-                onChange={handleChange}
-                fullWidth
-                helperText="Μόνο ο admin μπορεί να αλλάξει το ρόλο."
-              >
-                <MenuItem value="student">ΦΟΙΤΗΤΗΣ</MenuItem>
-                <MenuItem value="admin">ADMIN</MenuItem>
-              </TextField>
-            ) : (
-              <TextField
-                label="ΡΟΛΟΣ"
-                value={profile.role || 'student'}
-                fullWidth
-                InputProps={{ readOnly: true }}
-                helperText={user.id === ADMIN_UID ? 'Μόνο ο admin μπορεί να αλλάξει το ρόλο.' : ''}
-              />
-            )}
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setShowPasswordFields((v) => !v)}
-              fullWidth
-            >
-              ΑΛΛΑΓΗ ΚΩΔΙΚΟΥ
-            </Button>
-            {showPasswordFields && (
+          )}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setShowPasswordFields((v) => !v)}
+            fullWidth
+            sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
+          >
+            ΑΛΛΑΓΗ ΚΩΔΙΚΟΥ
+          </Button>
+          {showPasswordFields && (
+            <Card variant="outlined" sx={{ p: 2, borderRadius: 3, background: '#f4f6f8', boxShadow: 2 }}>
               <Stack spacing={1}>
                 <TextField
                   label="ΝΕΟΣ ΚΩΔΙΚΟΣ"
@@ -213,27 +268,39 @@ const Profile = () => {
                   color="primary"
                   onClick={handlePasswordChange}
                   fullWidth
+                  sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
                 >
                   ΑΠΟΘΗΚΕΥΣΗ ΚΩΔΙΚΟΥ
                 </Button>
-                {passwordError && <Alert severity="error">{passwordError}</Alert>}
-                {passwordSuccess && <Alert severity="success">{passwordSuccess}</Alert>}
+                {passwordError && <Alert severity="error" sx={{ fontWeight: 600 }}>{passwordError}</Alert>}
+                {passwordSuccess && <Alert severity="success" sx={{ fontWeight: 600 }}>{passwordSuccess}</Alert>}
               </Stack>
-            )}
-          </Stack>
-        </CardContent>
-        <CardActions sx={{ mt: 2 }}>
+            </Card>
+          )}
+          {error && <Alert severity="error" sx={{ fontWeight: 600 }}>{error}</Alert>}
+          {success && <Alert severity="success" sx={{ fontWeight: 600 }}>{success}</Alert>}
+        </Stack>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 4, width: '100%' }}>
           <Button
             variant="contained"
             color="primary"
             onClick={handleSave}
             fullWidth
             disabled={saving}
+            sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
           >
             ΑΠΟΘΗΚΕΥΣΗ ΣΤΟΙΧΕΙΩΝ
           </Button>
-          <Button variant="outlined" color="error" onClick={async () => { await supabase.auth.signOut(); navigate('/'); }} fullWidth>ΑΠΟΣΥΝΔΕΣΗ</Button>
-        </CardActions>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={async () => { await supabase.auth.signOut(); navigate('/'); }}
+            fullWidth
+            sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
+          >
+            ΑΠΟΣΥΝΔΕΣΗ
+          </Button>
+        </Stack>
         <Snackbar
           open={!!success}
           autoHideDuration={3000}

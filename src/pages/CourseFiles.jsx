@@ -20,6 +20,7 @@ const CourseFiles = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [uploaders, setUploaders] = useState({});
   const theme = useTheme();
 
   useEffect(() => {
@@ -42,6 +43,18 @@ const CourseFiles = () => {
       const { data: filesData, error: filesError } = await query;
       if (filesError) { setError('Σφάλμα ανάκτησης αρχείων'); setLoading(false); return; }
       setFiles(filesData);
+      // Fetch uploader names
+      const uploaderIds = [...new Set((filesData || []).map(f => f.uploader).filter(Boolean))];
+      if (uploaderIds.length > 0) {
+        const { data: uploaderProfiles } = await supabase.from('profiles').select('id,first_name,last_name,email').in('id', uploaderIds);
+        if (uploaderProfiles) {
+          const map = {};
+          uploaderProfiles.forEach(u => {
+            map[u.id] = (u.first_name || u.last_name) ? `${u.first_name || ''} ${u.last_name || ''}`.trim() : (u.email || u.id);
+          });
+          setUploaders(map);
+        }
+      }
       setLoading(false);
     };
     fetchData();
@@ -110,7 +123,7 @@ const CourseFiles = () => {
                         <PersonIcon fontSize="small" />
                       </Avatar>
                       <Typography variant="body2" color="text.secondary">
-                        {file.uploader}
+                        {uploaders[file.uploader] || file.uploader}
                       </Typography>
                     </Stack>
                   </Box>
@@ -119,7 +132,7 @@ const CourseFiles = () => {
                   </Typography>
                 </Stack>
               </CardContent>
-              <CardActions sx={{ flexDirection: 'column', gap: 1, minWidth: 120 }}>
+              <CardActions sx={{ p: 2, flexDirection: 'column', gap: 1, minWidth: 120, justifyContent: 'center', alignItems: 'center' }}>
                 <Tooltip title="Προβολή PDF">
                   <Button
                     variant="outlined"
@@ -129,7 +142,8 @@ const CourseFiles = () => {
                     rel="noopener noreferrer"
                     startIcon={<VisibilityIcon />}
                     size="small"
-                    sx={{ width: '100%' }}
+                    fullWidth
+                    sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}
                   >
                     Προβολή
                   </Button>
@@ -143,21 +157,22 @@ const CourseFiles = () => {
                     rel="noopener noreferrer"
                     startIcon={<DownloadIcon />}
                     size="small"
-                    sx={{ width: '100%' }}
+                    fullWidth
+                    sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}
                   >
                     Download
                   </Button>
                 </Tooltip>
                 {user && user.id === ADMIN_UID && !file.approved && (
                   <Tooltip title="Έγκριση αρχείου">
-                    <Button variant="outlined" color="success" startIcon={<CheckIcon />} onClick={() => handleApprove(file.id)} size="small" sx={{ width: '100%' }}>
+                    <Button variant="outlined" color="success" startIcon={<CheckIcon />} onClick={() => handleApprove(file.id)} size="small" fullWidth sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}>
                       Έγκριση
                     </Button>
                   </Tooltip>
                 )}
                 {user && user.id === ADMIN_UID && (
                   <Tooltip title="Διαγραφή αρχείου">
-                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(file.id, file.file_url)} size="small" sx={{ width: '100%' }}>
+                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(file.id, file.file_url)} size="small" fullWidth sx={{ minWidth: 140, fontWeight: 600, textTransform: 'none', justifyContent: 'center', alignItems: 'center', display: 'flex', px: 0 }}>
                       Διαγραφή
                     </Button>
                   </Tooltip>
