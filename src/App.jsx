@@ -35,7 +35,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ overflowX: 'hidden', maxWidth: '100vw' }}>
+      <Box sx={{ overflowX: 'hidden', maxWidth: '100vw', pt: { xs: '56px', md: '64px' } }}>
         <Router>
           <NavBar />
           <Routes>
