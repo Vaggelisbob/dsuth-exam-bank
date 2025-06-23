@@ -107,15 +107,16 @@ const CourseFiles = () => {
                   : 'linear-gradient(120deg, #fffbe6cc 60%, #ffd20033 100%)',
                 backdropFilter: 'blur(6px)',
                 borderColor: file.approved ? theme.palette.primary.light : theme.palette.secondary.main,
+                p: { xs: 2, sm: 3 },
                 display: 'flex',
                 alignItems: 'stretch',
-                px: { xs: 1, sm: 2 },
+                gap: { xs: 2, sm: 3 },
                 transition: 'box-shadow 0.2s, transform 0.2s',
                 '&:hover': { boxShadow: '0 12px 32px 0 rgba(31,38,135,0.18)', transform: 'translateY(-2px) scale(1.01)' },
                 minHeight: 140,
               }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mr: { xs: 1, sm: 2 }, py: 2, pr: 1, borderRight: '1.5px solid #e3eafc', minWidth: 70 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: 70, px: 1, py: 1, borderRight: '1.5px solid #e3eafc', bgcolor: 'rgba(255,255,255,0.45)', borderRadius: 2 }}>
                 <PictureAsPdfRoundedIcon color={file.approved ? 'primary' : 'warning'} sx={{ fontSize: 48, mb: 0.5 }} />
                 <Box sx={{ mt: 0.5 }}>
                   <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
@@ -123,7 +124,7 @@ const CourseFiles = () => {
                   </Typography>
                 </Box>
               </Box>
-              <CardContent sx={{ flex: 1, py: 2, px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1.5px solid #e3eafc', minWidth: 0 }}>
+              <CardContent sx={{ flex: 1, py: 1.5, px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1.5px solid #e3eafc', minWidth: 0, bgcolor: 'rgba(255,255,255,0.25)', borderRadius: 2 }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} alignItems={{ sm: 'center' }} spacing={1} justifyContent="space-between">
                   <Box>
                     <Typography variant="subtitle1" fontWeight={700} sx={{ color: theme.palette.primary.dark }}>
@@ -155,7 +156,7 @@ const CourseFiles = () => {
                   </Box>
                 </Stack>
               </CardContent>
-              <CardActions sx={{ p: 2, flexDirection: 'column', gap: 1.2, minWidth: 90, justifyContent: 'center', alignItems: 'center', bgcolor: 'rgba(255,255,255,0.7)', borderRadius: 3, minHeight: 0 }}>
+              <CardActions sx={{ p: 1.5, flexDirection: 'column', gap: 1.2, minWidth: 90, justifyContent: 'center', alignItems: 'center', bgcolor: 'rgba(255,255,255,0.55)', borderRadius: 2, minHeight: 0 }}>
                 <Tooltip title="Προβολή PDF">
                   <Button
                     variant="outlined"
