@@ -17,7 +17,7 @@ const GoogleLogo = (
   </svg>
 );
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -32,14 +32,14 @@ const Login = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleSignIn = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setMessage('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signUp({ email, password });
     if (error) setError(error.message);
-    else setMessage('Επιτυχής είσοδος!');
+    else setMessage('Έγινε εγγραφή! Έλεγξε το email σου για επιβεβαίωση.');
     setLoading(false);
   };
 
@@ -59,7 +59,7 @@ const Login = () => {
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
-          ΕΙΣΟΔΟΣ
+          ΕΓΓΡΑΦΗ
         </Typography>
         <Skeleton variant="rectangular" height={40} width="100%" sx={{ borderRadius: 2, mb: 2 }} />
         <Divider sx={{ my: 2, width: '100%' }}><Typography sx={{ color: '#888', fontWeight: 500 }}>Ή</Typography></Divider>
@@ -78,7 +78,7 @@ const Login = () => {
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
-          ΕΙΣΟΔΟΣ
+          ΕΓΓΡΑΦΗ
         </Typography>
         <Button
           variant="outlined"
@@ -114,7 +114,7 @@ const Login = () => {
             },
           }}
         >
-          ΣΥΝΔΕΣΗ ΜΕ GOOGLE
+          ΕΓΓΡΑΦΗ ΜΕ GOOGLE
         </Button>
         <Divider sx={{ my: 2, width: '100%' }}><Typography sx={{ color: '#888', fontWeight: 500 }}>Ή</Typography></Divider>
         <Box component="form" sx={{ mt: 0, width: '100%' }}>
@@ -127,7 +127,7 @@ const Login = () => {
               onChange={e => setEmail(e.target.value)}
             />
             <TextField
-              label="Κωδικός"
+              label="ΚΩΔΙΚΟΣ"
               type={showPassword ? 'text' : 'password'}
               fullWidth
               value={password}
@@ -153,16 +153,16 @@ const Login = () => {
               color="primary"
               fullWidth
               sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
-              onClick={handleSignIn}
+              onClick={handleSignUp}
               disabled={loading}
             >
-              ΕΙΣΟΔΟΣ
+              ΕΓΓΡΑΦΗ
             </Button>
             <Box sx={{ mt: 2, textAlign: 'center' }}>
               <Typography component="span" sx={{ fontWeight: 500, fontSize: '1.05rem', letterSpacing: 0.5, textTransform: 'uppercase', color: '#888', fontFamily: 'Roboto, Arial, sans-serif' }}>
-                ΔΕΝ ΕΧΕΙΣ ΛΟΓΑΡΙΑΣΜΟ;
+                ΕΧΕΙΣ ΗΔΗ ΛΟΓΑΡΙΑΣΜΟ;
               </Typography>{' '}
-              <MuiLink component={Link} to="/register" underline="none" sx={{
+              <MuiLink component={Link} to="/login" underline="none" sx={{
                 fontWeight: 700,
                 color: '#444',
                 fontSize: '1.05rem',
@@ -177,7 +177,7 @@ const Login = () => {
                 },
                 fontFamily: 'Roboto, Arial, sans-serif',
               }}>
-                ΕΓΓΡΑΦΗ
+                ΕΙΣΟΔΟΣ
               </MuiLink>
             </Box>
           </Stack>
@@ -187,4 +187,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Register; 

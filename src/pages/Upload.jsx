@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Button, TextField, MenuItem, Alert, CircularProgress, Stack } from '@mui/material';
+import { Container, Typography, Box, Button, TextField, MenuItem, Alert, CircularProgress, Stack, Skeleton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
@@ -10,7 +10,7 @@ const periods = [
 ];
 
 const Upload = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined);
   const [title, setTitle] = useState('');
   const [course, setCourse] = useState('');
   const [year, setYear] = useState('');
@@ -93,36 +93,54 @@ const Upload = () => {
     setLoading(false);
   };
 
+  if (user === undefined || loading) return (
+    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
+        ΑΝΕΒΑΣΜΑ ΑΡΧΕΙΟΥ ΕΞΕΤΑΣΗΣ
+      </Typography>
+      <Box sx={{ mt: 2 }}>
+        <Stack spacing={2} direction="column">
+          <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+          <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+          <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+          <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+          <Skeleton variant="rectangular" height={40} sx={{ borderRadius: 2, width: '60%' }} />
+          <Skeleton variant="rectangular" height={40} sx={{ borderRadius: 2, width: '100%' }} />
+        </Stack>
+      </Box>
+    </Container>
+  );
+
   if (!user) return null;
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
-        Ανέβασμα Αρχείου Εξέτασης
+        ΑΝΕΒΑΣΜΑ ΑΡΧΕΙΟΥ ΕΞΕΤΑΣΗΣ
       </Typography>
       <Box component="form" onSubmit={handleUpload} sx={{ mt: 2 }}>
         <Stack spacing={2} direction="column">
           <TextField
-            label="Τίτλος"
+            label="ΤΙΤΛΟΣ"
             fullWidth
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
           <TextField
-            label="Μάθημα"
+            label="ΜΑΘΗΜΑ"
             fullWidth
             value={course}
             onChange={e => setCourse(e.target.value)}
           />
           <TextField
-            label="Έτος"
+            label="ΕΤΟΣ"
             type="number"
             fullWidth
             value={year}
             onChange={e => setYear(e.target.value)}
           />
           <TextField
-            label="Εξεταστική"
+            label="ΕΞΕΤΑΣΤΙΚΗ"
             select
             fullWidth
             value={period}
@@ -138,7 +156,7 @@ const Upload = () => {
             sx={{ mt: 1, fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
             fullWidth
           >
-            Επιλογή Αρχείου
+            ΕΠΙΛΟΓΗ ΑΡΧΕΙΟΥ
             <input
               type="file"
               hidden
@@ -158,7 +176,7 @@ const Upload = () => {
               fullWidth
               sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
             >
-              Ανέβασμα
+              ΑΝΕΒΑΣΜΑ
             </Button>
             {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
           </Box>
