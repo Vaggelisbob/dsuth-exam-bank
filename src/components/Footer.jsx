@@ -57,7 +57,7 @@ const Footer = () => (
           © {new Date().getFullYear()} Τράπεζα Θεμάτων UTH
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 400 }}>
-          | Developed by <Link href="https://github.com/Vaggelisbob/dsuth-exam-bank" target="_blank" rel="noopener" underline="hover">Vaggelisbob</Link>
+          | Developed by <Link href="https://github.com/Vaggelisbob/dsuth-exam-bank" target="_blank" rel="noopener" underline="hover">Vaggelis Mpomponis</Link>
         </Typography>
       </Stack>
     </Box>
