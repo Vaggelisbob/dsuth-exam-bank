@@ -116,162 +116,161 @@ const Home = () => {
       overflowX: 'hidden',
       px: 0,
     }}>
-      <Container
-        disableGutters
-        maxWidth={false}
+      {/* Hero section */}
+      <Box
         sx={{
-          mt: 0,
-          mb: 0,
-          px: { xs: 1, sm: 2, md: 3 },
-          width: '100%',
-          maxWidth: 800,
-          mx: 'auto',
-          overflowX: 'clip',
+          width: '100vw',
+          position: 'relative',
+          left: '50%',
+          right: '50%',
+          marginLeft: '-50vw',
+          marginRight: '-50vw',
+          maxWidth: '100vw',
+          borderRadius: 0,
+          boxShadow: { xs: 4, md: 8 },
+          p: { xs: 2.5, sm: 5, md: 7 },
+          mb: { xs: 4, md: 6 },
+          minHeight: { xs: 320, md: 340 },
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #e3f0ff 0%, #c9e7ff 50%, #e0c3fc 100%)',
+          transition: 'background 0.5s',
         }}
       >
-        {/* Hero Section */}
-        <Box
-          sx={{
-            width: '100vw',
-            position: 'relative',
-            left: '50%',
-            right: '50%',
-            marginLeft: '-50vw',
-            marginRight: '-50vw',
-            maxWidth: '100vw',
-            borderRadius: 0,
-            boxShadow: { xs: 4, md: 8 },
-            p: { xs: 2.5, sm: 5, md: 7 },
-            mb: { xs: 4, md: 6 },
-            minHeight: { xs: 320, md: 340 },
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #e3f0ff 0%, #c9e7ff 50%, #e0c3fc 100%)',
-            transition: 'background 0.5s',
-          }}
-        >
-          <Box sx={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 700, textAlign: { xs: 'center', md: 'left' }, mx: 'auto' }}>
-            <Typography
-              variant={isMobile ? 'h5' : isTablet ? 'h3' : isUltraWide ? 'h1' : 'h2'}
-              color="primary"
-              gutterBottom
-              noWrap={false}
-              sx={{
-                fontWeight: 900,
-                mb: 1,
-                letterSpacing: '-1px',
-                fontSize: isUltraWide ? '3.2rem' : undefined,
-                textShadow: '0 2px 8px #e3eafc',
-                whiteSpace: !isMobile ? 'nowrap' : 'normal',
-                wordBreak: 'normal',
-                display: 'block',
-                width: '100%',
-                maxWidth: '100%',
-              }}
-            >
-              <SchoolIcon sx={{ fontSize: { xs: 36, md: 56, xl: 72 }, mr: 1, mb: -0.5, color: 'primary.main', verticalAlign: 'middle' }} />
-              Τράπεζα Θεμάτων UTH
-            </Typography>
-            <Typography
-              variant={isMobile ? 'body1' : 'h5'}
-              sx={{ mb: 2, color: 'text.secondary', fontWeight: 600, fontSize: isUltraWide ? '1.7rem' : undefined }}
-            >
-              ΨΗΦΙΑΚΑ ΣΥΣΤΗΜΑΤΑ, ΠΑΝΕΠΙΣΤΗΜΙΟ ΘΕΣΣΑΛΙΑΣ
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: 3, color: 'text.secondary', maxWidth: 600, fontSize: isUltraWide ? '1.25rem' : undefined, fontWeight: 500, mx: { xs: 'auto', md: 0 } }}
-            >
-              Βρες, κατέβασε ή μοιράσου θέματα και αρχεία προηγούμενων εξετάσεων της σχολής. Η γνώση ανήκει σε όλους!
-            </Typography>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2, width: '100%', maxWidth: 500, mx: { xs: 'auto', md: 0 } }}>
-              {user ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  startIcon={<UploadFileIcon />}
-                  href="/upload"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: isUltraWide ? '1.2rem' : undefined,
-                    px: 3,
-                    py: 1.2,
-                    borderRadius: 2,
-                    backgroundColor: 'primary.main',
-                    color: '#fff',
-                    boxShadow: 'none',
-                    transition: 'background 0.2s, color 0.2s',
-                    '&:hover': {
-                      backgroundColor: 'rgba(0,0,0,0.08)',
-                      color: 'primary.main',
-                      boxShadow: 'none',
-                    },
-                    width: { xs: '100%', sm: 'auto' },
-                  }}
-                >
-                  ΑΝΕΒΑΣΕ ΘΕΜΑ
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  href="/login"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: isUltraWide ? '1.2rem' : undefined,
-                    px: 3,
-                    py: 1.2,
-                    borderRadius: 2,
-                    backgroundColor: 'primary.main',
-                    color: '#fff',
-                    boxShadow: 'none',
-                    transition: 'background 0.2s, color 0.2s',
-                    '&:hover': {
-                      backgroundColor: 'rgba(0,0,0,0.04)',
-                      color: 'primary.main',
-                      boxShadow: 'none',
-                    },
-                    width: { xs: '100%', sm: 'auto' },
-                  }}
-                >
-                  ΣΥΝΔΕΣΗ ΓΙΑ ΑΝΕΒΑΣΜΑ
-                </Button>
-              )}
+        <Box sx={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 700, textAlign: { xs: 'center', md: 'left' }, mx: 'auto' }}>
+          <Typography
+            variant={isMobile ? 'h5' : isTablet ? 'h3' : isUltraWide ? 'h1' : 'h2'}
+            color="primary"
+            gutterBottom
+            noWrap={false}
+            sx={{
+              fontWeight: 900,
+              mb: 1,
+              letterSpacing: '-1px',
+              fontSize: isUltraWide ? '3.2rem' : undefined,
+              textShadow: '0 2px 8px #e3eafc',
+              whiteSpace: !isMobile ? 'nowrap' : 'normal',
+              wordBreak: 'normal',
+              display: 'block',
+              width: '100%',
+              maxWidth: '100%',
+            }}
+          >
+            <SchoolIcon sx={{ fontSize: { xs: 36, md: 56, xl: 72 }, mr: 1, mb: -0.5, color: 'primary.main', verticalAlign: 'middle' }} />
+            Τράπεζα Θεμάτων UTH
+          </Typography>
+          <Typography
+            variant={isMobile ? 'body1' : 'h5'}
+            sx={{ mb: 2, color: 'text.secondary', fontWeight: 600, fontSize: isUltraWide ? '1.7rem' : undefined }}
+          >
+            ΨΗΦΙΑΚΑ ΣΥΣΤΗΜΑΤΑ, ΠΑΝΕΠΙΣΤΗΜΙΟ ΘΕΣΣΑΛΙΑΣ
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ mb: 3, color: 'text.secondary', maxWidth: 600, fontSize: isUltraWide ? '1.25rem' : undefined, fontWeight: 500, mx: { xs: 'auto', md: 0 } }}
+          >
+            Βρες, κατέβασε ή μοιράσου θέματα και αρχεία προηγούμενων εξετάσεων της σχολής. Η γνώση ανήκει σε όλους!
+          </Typography>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2, width: '100%', maxWidth: 500, mx: { xs: 'auto', md: 0 } }}>
+            {user ? (
               <Button
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 size="large"
-                startIcon={<MenuBookIcon />}
-                href="/courses"
+                startIcon={<UploadFileIcon />}
+                href="/upload"
                 sx={{
                   fontWeight: 700,
                   fontSize: isUltraWide ? '1.2rem' : undefined,
                   px: 3,
                   py: 1.2,
                   borderRadius: 2,
-                  backgroundColor: 'transparent',
-                  color: 'primary.main',
+                  backgroundColor: 'primary.main',
+                  color: '#fff',
                   boxShadow: 'none',
-                  borderWidth: 2,
-                  borderColor: 'primary.main',
                   transition: 'background 0.2s, color 0.2s',
                   '&:hover': {
-                    backgroundColor: 'primary.main',
-                    color: '#fff',
+                    backgroundColor: 'rgba(0,0,0,0.08)',
+                    color: 'primary.main',
                     boxShadow: 'none',
                   },
                   width: { xs: '100%', sm: 'auto' },
                 }}
               >
-                ΔΕΣ ΤΑ ΜΑΘΗΜΑΤΑ
+                ΑΝΕΒΑΣΕ ΘΕΜΑ
               </Button>
-            </Stack>
-          </Box>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                href="/login"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: isUltraWide ? '1.2rem' : undefined,
+                  px: 3,
+                  py: 1.2,
+                  borderRadius: 2,
+                  backgroundColor: 'primary.main',
+                  color: '#fff',
+                  boxShadow: 'none',
+                  transition: 'background 0.2s, color 0.2s',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0,0,0,0.04)',
+                    color: 'primary.main',
+                    boxShadow: 'none',
+                  },
+                  width: { xs: '100%', sm: 'auto' },
+                }}
+              >
+                ΣΥΝΔΕΣΗ ΓΙΑ ΑΝΕΒΑΣΜΑ
+              </Button>
+            )}
+            <Button
+              variant="outlined"
+              color="primary"
+              size="large"
+              startIcon={<MenuBookIcon />}
+              href="/courses"
+              sx={{
+                fontWeight: 700,
+                fontSize: isUltraWide ? '1.2rem' : undefined,
+                px: 3,
+                py: 1.2,
+                borderRadius: 2,
+                backgroundColor: 'transparent',
+                color: 'primary.main',
+                boxShadow: 'none',
+                borderWidth: 2,
+                borderColor: 'primary.main',
+                transition: 'background 0.2s, color 0.2s',
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: '#fff',
+                  boxShadow: 'none',
+                },
+                width: { xs: '100%', sm: 'auto' },
+              }}
+            >
+              ΔΕΣ ΤΑ ΜΑΘΗΜΑΤΑ
+            </Button>
+          </Stack>
         </Box>
+      </Box>
+      {/* Φίλτρα + Λίστα */}
+      <Container
+        disableGutters
+        maxWidth="lg"
+        sx={{
+          mt: 0,
+          mb: 0,
+          px: 0,
+          width: '100vw',
+          overflowX: 'hidden',
+        }}
+      >
         {/* Header κάτω από το hero section */}
         <Typography variant="h6" align="center" sx={{ fontWeight: 700, mb: 3, color: 'primary.main', letterSpacing: 0.5 }}>
           Βρες αρχεία εξετάσεων ανά εξάμηνο και μάθημα
@@ -353,7 +352,7 @@ const Home = () => {
             </Drawer>
           </Box>
         ) : (
-          <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3, width: '100%', maxWidth: '100%', overflowX: 'auto', ml: 0, mr: 0 }} alignItems="stretch">
+          <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3 }} alignItems="stretch">
             <Grid item xs={12} sm={3} md={2} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
               <TextField
                 label="ΕΞΑΜΗΝΟ"
@@ -440,7 +439,7 @@ const Home = () => {
         )}
         {loading ? (
           <Box sx={{ mt: 2 }}>
-            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100vw', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
+            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
               <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
                 <TableHead>
                   <TableRow>
@@ -466,7 +465,7 @@ const Home = () => {
             </TableContainer>
           </Box>
         ) : (
-          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100vw', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3, ml: 0, mr: 0 }}>
+          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
             <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
               <TableHead>
                 <TableRow>
