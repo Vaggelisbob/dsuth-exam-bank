@@ -155,7 +155,7 @@ const NavBar = () => {
             )}
           </Box>
           {/* Mobile/Tablet */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {/* Hamburger menu μόνο */}
             <IconButton color="inherit" edge="end" onClick={() => setMobileOpen(true)} sx={{ mx: 1.5, '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none', border: 'none' } }}>
               <MenuIcon />
