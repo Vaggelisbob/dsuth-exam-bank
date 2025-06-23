@@ -74,6 +74,7 @@ const NavBar = () => {
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <Button color="inherit" component={Link} to="/" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΑΡΧΙΚΗ</Button>
             <Button color="inherit" component={Link} to="/upload" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΑΝΕΒΑΣΜΑ</Button>
+            <Button color="inherit" component={Link} to="/courses" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΜΑΘΗΜΑΤΑ</Button>
             {user === undefined ? (
               <Skeleton variant="circular" width={40} height={40} sx={{ ml: 1, bgcolor: 'rgba(255,255,255,0.3)', pr: 2 }} />
             ) : user ? (

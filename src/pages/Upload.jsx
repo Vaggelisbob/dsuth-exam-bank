@@ -21,6 +21,8 @@ const Upload = () => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+  const [courses, setCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -48,11 +50,21 @@ const Upload = () => {
     };
   }, [navigate]);
 
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setCoursesLoading(true);
+      const { data, error } = await supabase.from('courses').select('*').order('name', { ascending: true });
+      if (!error && data) setCourses(data);
+      setCoursesLoading(false);
+    };
+    fetchCourses();
+  }, []);
+
   const handleUpload = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    if (!title || !course || !year || !period || !file) {
+    if (!course || !year || !period || !file) {
       setError('Συμπλήρωσε όλα τα πεδία και επίλεξε αρχείο.');
       return;
     }
@@ -71,12 +83,12 @@ const Upload = () => {
     // 3. Καταχωρούμε στη βάση
     const { error: dbError } = await supabase.from('exams').insert([
       {
-        title,
         course,
         year: parseInt(year),
         period,
         uploader: user.id,
         file_url: publicUrlData.publicUrl,
+        approved: false,
       },
     ]);
     if (dbError) {
@@ -85,7 +97,6 @@ const Upload = () => {
       return;
     }
     setSuccess('Το αρχείο ανέβηκε με επιτυχία!');
-    setTitle('');
     setCourse('');
     setYear('');
     setPeriod('');
@@ -121,17 +132,18 @@ const Upload = () => {
       <Box component="form" onSubmit={handleUpload} sx={{ mt: 2 }}>
         <Stack spacing={2} direction="column">
           <TextField
-            label="ΤΙΤΛΟΣ"
-            fullWidth
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-          />
-          <TextField
             label="ΜΑΘΗΜΑ"
+            select
             fullWidth
             value={course}
             onChange={e => setCourse(e.target.value)}
-          />
+            disabled={coursesLoading}
+            helperText={coursesLoading ? 'Φόρτωση μαθημάτων...' : (courses.length === 0 ? 'Δεν υπάρχουν διαθέσιμα μαθήματα. Επικοινώνησε με τον διαχειριστή.' : '')}
+          >
+            {courses.map((c) => (
+              <MenuItem key={c.id} value={c.name}>{`${c.name} (Εξάμηνο ${c.semester})`}</MenuItem>
+            ))}
+          </TextField>
           <TextField
             label="ΕΤΟΣ"
             type="number"
