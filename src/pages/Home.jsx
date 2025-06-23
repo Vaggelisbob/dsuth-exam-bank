@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, TextField, MenuItem, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Card, CardContent, CardActions, Stack, Grid, Skeleton } from '@mui/material';
+import { Container, Typography, Box, TextField, MenuItem, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Card, CardContent, CardActions, Stack, Grid, Skeleton, Drawer, IconButton } from '@mui/material';
 import { supabase } from '../supabaseClient';
 import SchoolIcon from '@mui/icons-material/School';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 
 const periods = ['Ιανουάριος', 'Ιούνιος', 'Σεπτέμβριος'];
@@ -16,6 +18,7 @@ const Home = () => {
   const [courses, setCourses] = useState([]);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [user, setUser] = useState(null);
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -195,74 +198,138 @@ const Home = () => {
           </Box>
         </Box>
         {/* Filters & List */}
-        <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3 }} alignItems="stretch">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
-            {loading ? (
-              <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
-            ) : (
-              <TextField
-                label="ΜΑΘΗΜΑ"
-                select
-                value={course}
-                onChange={e => setCourse(e.target.value)}
-                fullWidth
-                size={isMobile ? 'small' : 'medium'}
-                sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
-              >
-                <MenuItem value="">ΟΛΑ</MenuItem>
-                {courses.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
-              </TextField>
-            )}
+        {isMobile ? (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<FilterListIcon />}
+              onClick={() => setFilterDrawerOpen(true)}
+              sx={{ borderRadius: 2, fontWeight: 600 }}
+            >
+              ΦΙΛΤΡΑ
+            </Button>
+            <Drawer
+              anchor="bottom"
+              open={filterDrawerOpen}
+              onClose={() => setFilterDrawerOpen(false)}
+              PaperProps={{ sx: { borderTopLeftRadius: 16, borderTopRightRadius: 16, p: 2 } }}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>Φίλτρα</Typography>
+                <IconButton onClick={() => setFilterDrawerOpen(false)}><CloseIcon /></IconButton>
+              </Box>
+              <Stack spacing={2}>
+                <TextField
+                  label="ΜΑΘΗΜΑ"
+                  select
+                  value={course}
+                  onChange={e => setCourse(e.target.value)}
+                  fullWidth
+                  size="small"
+                >
+                  <MenuItem value="">ΟΛΑ</MenuItem>
+                  {courses.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                </TextField>
+                <TextField
+                  label="ΕΤΟΣ"
+                  type="number"
+                  value={year}
+                  onChange={e => setYear(e.target.value)}
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label="ΕΞΕΤΑΣΤΙΚΗ"
+                  select
+                  value={period}
+                  onChange={e => setPeriod(e.target.value)}
+                  fullWidth
+                  size="small"
+                >
+                  <MenuItem value="">ΟΛΕΣ</MenuItem>
+                  {periods.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
+                </TextField>
+                <Button
+                  variant="outlined"
+                  onClick={() => { setCourse(''); setYear(''); setPeriod(''); }}
+                  fullWidth
+                  size="large"
+                >
+                  ΚΑΘΑΡΙΣΜΟΣ
+                </Button>
+              </Stack>
+            </Drawer>
+          </Box>
+        ) : (
+          <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3 }} alignItems="stretch">
+            <Grid item xs={12} sm={4} md={3} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
+              {loading ? (
+                <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+              ) : (
+                <TextField
+                  label="ΜΑΘΗΜΑ"
+                  select
+                  value={course}
+                  onChange={e => setCourse(e.target.value)}
+                  fullWidth
+                  size={isMobile ? 'small' : 'medium'}
+                  sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
+                >
+                  <MenuItem value="">ΟΛΑ</MenuItem>
+                  {courses.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                </TextField>
+              )}
+            </Grid>
+            <Grid item xs={6} sm={4} md={2} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
+              {loading ? (
+                <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+              ) : (
+                <TextField
+                  label="ΕΤΟΣ"
+                  type="number"
+                  value={year}
+                  onChange={e => setYear(e.target.value)}
+                  fullWidth
+                  size={isMobile ? 'small' : 'medium'}
+                  sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
+                />
+              )}
+            </Grid>
+            <Grid item xs={6} sm={4} md={3} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
+              {loading ? (
+                <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+              ) : (
+                <TextField
+                  label="ΕΞΕΤΑΣΤΙΚΗ"
+                  select
+                  value={period}
+                  onChange={e => setPeriod(e.target.value)}
+                  fullWidth
+                  size={isMobile ? 'small' : 'medium'}
+                  sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
+                >
+                  <MenuItem value="">ΟΛΕΣ</MenuItem>
+                  {periods.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
+                </TextField>
+              )}
+            </Grid>
+            <Grid item xs={12} sm={12} md={2} lg={2} xl={2} display="flex" alignItems="stretch">
+              {loading ? (
+                <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
+              ) : (
+                <Button
+                  variant="outlined"
+                  onClick={() => { setCourse(''); setYear(''); setPeriod(''); }}
+                  fullWidth
+                  size={isMobile ? 'small' : 'medium'}
+                  sx={{ height: '100%', fontSize: isUltraWide ? '1.1rem' : undefined, minHeight: 56 }}
+                >
+                  ΚΑΘΑΡΙΣΜΟΣ
+                </Button>
+              )}
+            </Grid>
           </Grid>
-          <Grid item xs={6} sm={4} md={2} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
-            {loading ? (
-              <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
-            ) : (
-              <TextField
-                label="ΕΤΟΣ"
-                type="number"
-                value={year}
-                onChange={e => setYear(e.target.value)}
-                fullWidth
-                size={isMobile ? 'small' : 'medium'}
-                sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
-              />
-            )}
-          </Grid>
-          <Grid item xs={6} sm={4} md={3} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
-            {loading ? (
-              <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
-            ) : (
-              <TextField
-                label="ΕΞΕΤΑΣΤΙΚΗ"
-                select
-                value={period}
-                onChange={e => setPeriod(e.target.value)}
-                fullWidth
-                size={isMobile ? 'small' : 'medium'}
-                sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
-              >
-                <MenuItem value="">ΟΛΕΣ</MenuItem>
-                {periods.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
-              </TextField>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={12} md={2} lg={2} xl={2} display="flex" alignItems="stretch">
-            {loading ? (
-              <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
-            ) : (
-              <Button
-                variant="outlined"
-                onClick={() => { setCourse(''); setYear(''); setPeriod(''); }}
-                fullWidth
-                size={isMobile ? 'small' : 'medium'}
-                sx={{ height: '100%', fontSize: isUltraWide ? '1.1rem' : undefined, minHeight: 56 }}
-              >
-                ΚΑΘΑΡΙΣΜΟΣ
-              </Button>
-            )}
-          </Grid>
-        </Grid>
+        )}
         {loading ? (
           <Box sx={{ mt: 2 }}>
             {isMobile ? (
