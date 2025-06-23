@@ -133,25 +133,14 @@ const NavBar = () => {
                   }}>
                     {user.email}
                   </MenuItem>
-                  <MenuItem onClick={handleSettingsMenu} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
-                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><SettingsIcon fontSize="small" /></ListItemIcon>
-                  </MenuItem>
-                  <Menu
-                    anchorEl={settingsAnchorEl}
-                    open={openSettings}
-                    onClose={handleSettingsClose}
-                    anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    {user && user.id === ADMIN_UID && (
-                      <MenuItem component={Link} to="/admin" onClick={() => { handleSettingsClose(); handleClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
-                        Ρυθμίσεις Admin
-                      </MenuItem>
-                    )}
-                    <MenuItem onClick={() => { handleProfile(); handleSettingsClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
-                      Ρυθμίσεις Προφίλ
+                  {user && user.id === ADMIN_UID && (
+                    <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                      Ρυθμίσεις Admin
                     </MenuItem>
-                  </Menu>
+                  )}
+                  <MenuItem onClick={handleProfile} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                    Ρυθμίσεις Προφίλ
+                  </MenuItem>
                   <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
                     <ListItemIcon sx={{ color: 'error.main', minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><LogoutIcon fontSize="small" /></ListItemIcon>
                   </MenuItem>
@@ -209,25 +198,14 @@ const NavBar = () => {
                   }}>
                     {user.email}
                   </MenuItem>
-                  <MenuItem onClick={handleSettingsMenu} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
-                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><SettingsIcon fontSize="small" /></ListItemIcon>
-                  </MenuItem>
-                  <Menu
-                    anchorEl={settingsAnchorEl}
-                    open={openSettings}
-                    onClose={handleSettingsClose}
-                    anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    {user && user.id === ADMIN_UID && (
-                      <MenuItem component={Link} to="/admin" onClick={() => { handleSettingsClose(); handleClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
-                        Ρυθμίσεις Admin
-                      </MenuItem>
-                    )}
-                    <MenuItem onClick={() => { handleProfile(); handleSettingsClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
-                      Ρυθμίσεις Προφίλ
+                  {user && user.id === ADMIN_UID && (
+                    <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                      Ρυθμίσεις Admin
                     </MenuItem>
-                  </Menu>
+                  )}
+                  <MenuItem onClick={handleProfile} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                    Ρυθμίσεις Προφίλ
+                  </MenuItem>
                   <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
                     <ListItemIcon sx={{ color: 'error.main', minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><LogoutIcon fontSize="small" /></ListItemIcon>
                   </MenuItem>
