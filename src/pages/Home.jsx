@@ -442,7 +442,7 @@ const Home = () => {
         )}
         {loading ? (
           <Box sx={{ mt: 2 }}>
-            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
+            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
               <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
                 <TableHead>
                   <TableRow>
@@ -468,7 +468,7 @@ const Home = () => {
             </TableContainer>
           </Box>
         ) : (
-          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
+          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
             <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
               <TableHead>
                 <TableRow>
