@@ -8,6 +8,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
 
 const periods = ['Ιανουάριος', 'Ιούνιος', 'Σεπτέμβριος'];
@@ -24,6 +26,8 @@ const Home = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [user, setUser] = useState(null);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [examFavorites, setExamFavorites] = useState([]);
+  const [favLoading, setFavLoading] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -76,6 +80,32 @@ const Home = () => {
       setUser(data?.session?.user || null);
     });
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from('favorites_exams')
+      .select('exam_id')
+      .eq('user_id', user.id)
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setExamFavorites(data.map(f => f.exam_id));
+        }
+      });
+  }, [user]);
+
+  const toggleExamFavorite = async (examId) => {
+    if (!user) return;
+    setFavLoading(true);
+    if (examFavorites.includes(examId)) {
+      await supabase.from('favorites_exams').delete().eq('user_id', user.id).eq('exam_id', examId);
+      setExamFavorites(examFavorites.filter(id => id !== examId));
+    } else {
+      await supabase.from('favorites_exams').insert([{ user_id: user.id, exam_id: examId }]);
+      setExamFavorites([...examFavorites, examId]);
+    }
+    setFavLoading(false);
+  };
 
   return (
     <Box sx={{
@@ -244,7 +274,7 @@ const Home = () => {
           Βρες αρχεία εξετάσεων ανά εξάμηνο και μάθημα
         </Typography>
         {/* Filters & List */}
-        {isMobile ? (
+        {isMobile || isTablet ? (
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <Button
               variant="outlined"
@@ -407,80 +437,31 @@ const Home = () => {
         )}
         {loading ? (
           <Box sx={{ mt: 2 }}>
-            {isMobile ? (
-              <Stack spacing={2}>
-                {[...Array(3)].map((_, i) => (
-                  <Card key={i} variant="outlined" sx={{ mx: { xs: 0, sm: 2 } }}>
-                    <CardContent>
-                      <Skeleton variant="text" width="60%" height={32} sx={{ mb: 1 }} />
-                      <Skeleton variant="text" width="40%" height={24} />
-                      <Skeleton variant="text" width="30%" height={24} />
-                      <Skeleton variant="text" width="30%" height={24} />
-                    </CardContent>
-                    <CardActions>
-                      <Skeleton variant="rectangular" width="100%" height={36} />
-                    </CardActions>
-                  </Card>
-                ))}
-              </Stack>
-            ) : (
-              <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: isUltraWide ? 4 : 0 }}>
-                <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ fontWeight: 600 }}>ΤΙΤΛΟΣ</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>ΜΑΘΗΜΑ</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>ΕΤΟΣ</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>ΕΞΕΤΑΣΤΙΚΗ</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>ΛΗΨΗ</TableCell>
+            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: isUltraWide ? 4 : 0 }}>
+              <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 600 }}>ΤΙΤΛΟΣ</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>ΜΑΘΗΜΑ</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>ΕΤΟΣ</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>ΕΞΕΤΑΣΤΙΚΗ</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>ΛΗΨΗ</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {[...Array(5)].map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell><Skeleton variant="text" width="80%" /></TableCell>
+                      <TableCell><Skeleton variant="text" width="60%" /></TableCell>
+                      <TableCell><Skeleton variant="text" width="40%" /></TableCell>
+                      <TableCell><Skeleton variant="text" width="60%" /></TableCell>
+                      <TableCell><Skeleton variant="rectangular" width={80} height={32} /></TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {[...Array(5)].map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell><Skeleton variant="text" width="80%" /></TableCell>
-                        <TableCell><Skeleton variant="text" width="60%" /></TableCell>
-                        <TableCell><Skeleton variant="text" width="40%" /></TableCell>
-                        <TableCell><Skeleton variant="text" width="60%" /></TableCell>
-                        <TableCell><Skeleton variant="rectangular" width={80} height={32} /></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
-        ) : isMobile ? (
-          <Stack spacing={2}>
-            {exams.length === 0 ? (
-              <Typography align="center">Δεν βρέθηκαν αρχεία.</Typography>
-            ) : (
-              exams.map((exam) => (
-                <Card key={exam.id} variant="outlined" sx={{ mx: { xs: 0, sm: 2 } }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem', xl: isUltraWide ? '1.5rem' : undefined } }}>{exam.title}</Typography>
-                    <Typography variant="body2" sx={{ fontSize: isUltraWide ? '1.1rem' : undefined }}>Μάθημα: {exam.course}</Typography>
-                    <Typography variant="body2" sx={{ fontSize: isUltraWide ? '1.1rem' : undefined }}>Έτος: {exam.year}</Typography>
-                    <Typography variant="body2" sx={{ fontSize: isUltraWide ? '1.1rem' : undefined }}>Εξεταστική: {exam.period}</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href={exam.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      size="small"
-                      fullWidth
-                      sx={{ fontSize: isUltraWide ? '1.1rem' : undefined }}
-                    >
-                      DOWNLOAD
-                    </Button>
-                  </CardActions>
-                </Card>
-              ))
-            )}
-          </Stack>
         ) : (
           <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: isUltraWide ? 4 : 0 }}>
             <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
@@ -504,30 +485,45 @@ const Home = () => {
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.year}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.period}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>
-                        <Tooltip title="Προβολή">
-                          <IconButton
-                            color="info"
-                            href={exam.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            size="small"
-                            sx={{ mr: 1, borderRadius: '50%', background: '#e3eafc', '&:hover': { background: '#d0e2ff' } }}
-                          >
-                            <VisibilityIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Λήψη">
-                          <IconButton
-                            color="primary"
-                            href={exam.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            size="small"
-                            sx={{ borderRadius: '50%', background: '#fbe9e7', '&:hover': { background: '#ffccbc' } }}
-                          >
-                            <DownloadIcon />
-                          </IconButton>
-                        </Tooltip>
+                        <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
+                          <Tooltip title="Προβολή">
+                            <IconButton
+                              color="info"
+                              href={exam.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              size="small"
+                              sx={{ mr: isMobile ? 0 : 1, borderRadius: '50%', background: '#e3eafc', '&:hover': { background: '#d0e2ff' } }}
+                            >
+                              <VisibilityIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Λήψη">
+                            <IconButton
+                              color="primary"
+                              href={exam.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              size="small"
+                              sx={{ borderRadius: '50%', background: '#fbe9e7', '&:hover': { background: '#ffccbc' } }}
+                            >
+                              <DownloadIcon />
+                            </IconButton>
+                          </Tooltip>
+                          {user && (
+                            <Tooltip title={examFavorites.includes(exam.id) ? 'Αφαίρεση από αγαπημένα' : 'Προσθήκη στα αγαπημένα'}>
+                              <IconButton
+                                aria-label={examFavorites.includes(exam.id) ? 'Αφαίρεση από αγαπημένα' : 'Προσθήκη στα αγαπημένα'}
+                                onClick={e => { e.stopPropagation(); toggleExamFavorite(exam.id); }}
+                                color="error"
+                                sx={{ transition: 'transform 0.15s', '&:hover': { transform: 'scale(1.18)' }, ml: isMobile ? 0 : 1 }}
+                                disabled={favLoading}
+                              >
+                                {examFavorites.includes(exam.id) ? <FavoriteIcon sx={{ fontSize: 24 }} /> : <FavoriteBorderIcon sx={{ fontSize: 24 }} />}
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </Stack>
                       </TableCell>
                     </TableRow>
                   ))
