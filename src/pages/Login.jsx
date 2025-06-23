@@ -3,7 +3,7 @@ import { Container, Typography, Box, Button, TextField, Alert, Stack, IconButton
 import { supabase } from '../supabaseClient';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Επίσημο Google G logo
 const GoogleLogo = (
@@ -25,6 +25,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -39,7 +40,10 @@ const Login = () => {
     setMessage('');
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) setError(error.message);
-    else setMessage('Επιτυχής είσοδος!');
+    else {
+      setMessage('Επιτυχής είσοδος!');
+      navigate('/');
+    }
     setLoading(false);
   };
 
