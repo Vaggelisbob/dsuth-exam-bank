@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, TextField, MenuItem, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Card, CardContent, CardActions, Stack, Grid, Skeleton, Drawer, IconButton } from '@mui/material';
+import { Container, Typography, Box, TextField, MenuItem, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Card, CardContent, CardActions, Stack, Grid, Skeleton, Drawer, IconButton, Tooltip } from '@mui/material';
 import { supabase } from '../supabaseClient';
 import SchoolIcon from '@mui/icons-material/School';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DownloadIcon from '@mui/icons-material/Download';
 import { useNavigate } from 'react-router-dom';
 
 const periods = ['Ιανουάριος', 'Ιούνιος', 'Σεπτέμβριος'];
@@ -411,37 +413,48 @@ const Home = () => {
             <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΤΙΤΛΟΣ</TableCell>
                   <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΜΑΘΗΜΑ</TableCell>
                   <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΤΟΣ</TableCell>
                   <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΞΕΤΑΣΤΙΚΗ</TableCell>
-                  <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΛΗΨΗ</TableCell>
+                  <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΝΕΡΓΕΙΕΣ</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {exams.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} align="center">Δεν βρέθηκαν αρχεία.</TableCell>
+                    <TableCell colSpan={4} align="center">Δεν βρέθηκαν αρχεία.</TableCell>
                   </TableRow>
                 ) : (
                   exams.map((exam) => (
                     <TableRow key={exam.id}>
-                      <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.title}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.course}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.year}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.period}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          href={exam.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          size="small"
-                          sx={{ fontSize: isUltraWide ? '1.1rem' : undefined }}
-                        >
-                          DOWNLOAD
-                        </Button>
+                        <Tooltip title="Προβολή">
+                          <IconButton
+                            color="info"
+                            href={exam.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            size="small"
+                            sx={{ mr: 1, borderRadius: '50%', background: '#e3eafc', '&:hover': { background: '#d0e2ff' } }}
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Λήψη">
+                          <IconButton
+                            color="primary"
+                            href={exam.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            size="small"
+                            sx={{ borderRadius: '50%', background: '#fbe9e7', '&:hover': { background: '#ffccbc' } }}
+                          >
+                            <DownloadIcon />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))

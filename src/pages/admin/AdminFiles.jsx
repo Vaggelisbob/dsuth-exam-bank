@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Alert, TablePagination, TextField, InputAdornment, Card, CardContent, CardActions, Stack, Skeleton } from '@mui/material';
+import { Container, Typography, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Alert, TablePagination, TextField, InputAdornment, Card, CardContent, CardActions, Stack, Skeleton, Tabs, Tab, Chip, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { supabase } from '../../supabaseClient';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+import DoneIcon from '@mui/icons-material/Done';
 
 const AdminFiles = () => {
   const [exams, setExams] = useState([]);
@@ -14,6 +19,8 @@ const AdminFiles = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+  const [tab, setTab] = useState(0);
+  const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null, file_url: null });
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -37,15 +44,14 @@ const AdminFiles = () => {
     const getUploaderEmails = async () => {
       const uploaderIds = [...new Set(exams.map(e => e.uploader).filter(Boolean))];
       if (uploaderIds.length === 0) return;
-      // Προσπάθησε να κάνεις fetch από public.users (αν υπάρχει)
-      // Αν δεν υπάρχει, άφησε το uid
-      // Παράδειγμα:
-      // const { data } = await supabase.from('users').select('id,email').in('id', uploaderIds);
-      // if (data) {
-      //   const map = {};
-      //   data.forEach(u => { map[u.id] = u.email; });
-      //   setUsers(map);
-      // }
+      const { data } = await supabase.from('profiles').select('id,first_name,last_name,email').in('id', uploaderIds);
+      if (data) {
+        const map = {};
+        data.forEach(u => {
+          map[u.id] = (u.first_name || u.last_name) ? `${u.first_name || ''} ${u.last_name || ''}`.trim() : (u.email || u.id);
+        });
+        setUsers(map);
+      }
     };
     getUploaderEmails();
   }, [exams]);
@@ -81,7 +87,17 @@ const AdminFiles = () => {
       (exam.year && String(exam.year).includes(s))
     );
   });
-  const paginatedExams = filteredExams.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const filteredByTab = filteredExams.filter(exam => tab === 0 ? !exam.approved : exam.approved);
+  const paginatedExams = filteredByTab.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  const handleOpenDelete = (id, file_url) => setConfirmDelete({ open: true, id, file_url });
+  const handleCloseDelete = () => setConfirmDelete({ open: false, id: null, file_url: null });
+  const handleConfirmDelete = async () => {
+    if (confirmDelete.id && confirmDelete.file_url) {
+      await handleDelete(confirmDelete.id, confirmDelete.file_url);
+    }
+    handleCloseDelete();
+  };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
@@ -106,6 +122,10 @@ const AdminFiles = () => {
           sx={{ flex: 1, minWidth: isMobile ? 0 : 200 }}
         />
       </Stack>
+      <Tabs value={tab} onChange={(_, v) => { setTab(v); setPage(0); }} sx={{ mb: 2 }} centered>
+        <Tab label="Εκκρεμούν" icon={<HourglassEmptyIcon />} iconPosition="start" sx={{ textTransform: 'none' }} />
+        <Tab label="Εγκεκριμένα" icon={<CheckCircleIcon />} iconPosition="start" sx={{ textTransform: 'none' }} />
+      </Tabs>
       {loading ? (
         <Box sx={{ mt: 2 }}>
           {isMobile ? (
@@ -133,14 +153,12 @@ const AdminFiles = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>ΤΙΤΛΟΣ</TableCell>
-                    <TableCell>ΜΑΘΗΜΑ</TableCell>
-                    <TableCell>ΕΤΟΣ</TableCell>
-                    <TableCell>ΕΞΕΤΑΣΤΙΚΗ</TableCell>
-                    <TableCell>UPLOADER</TableCell>
-                    <TableCell>ΕΓΚΕΚΡΙΜΕΝΟ</TableCell>
-                    <TableCell>ΛΗΨΗ</TableCell>
-                    <TableCell>ΕΝΕΡΓΕΙΕΣ</TableCell>
+                    <TableCell>Μάθημα</TableCell>
+                    <TableCell>Έτος</TableCell>
+                    <TableCell>Εξεταστική</TableCell>
+                    <TableCell>Uploader</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Ενέργειες</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -150,9 +168,7 @@ const AdminFiles = () => {
                       <TableCell><Skeleton variant="text" width="60%" /></TableCell>
                       <TableCell><Skeleton variant="text" width="40%" /></TableCell>
                       <TableCell><Skeleton variant="text" width="60%" /></TableCell>
-                      <TableCell><Skeleton variant="text" width="60%" /></TableCell>
                       <TableCell><Skeleton variant="text" width="40%" /></TableCell>
-                      <TableCell><Skeleton variant="rectangular" width={80} height={32} /></TableCell>
                       <TableCell><Skeleton variant="rectangular" width={80} height={32} /></TableCell>
                     </TableRow>
                   ))}
@@ -169,51 +185,29 @@ const AdminFiles = () => {
             paginatedExams.map((exam) => (
               <Card key={exam.id} variant="outlined">
                 <CardContent>
-                  <Typography variant="h6">{exam.title}</Typography>
                   <Typography variant="body2">Μάθημα: {exam.course}</Typography>
                   <Typography variant="body2">Έτος: {exam.year}</Typography>
                   <Typography variant="body2">Εξεταστική: {exam.period}</Typography>
                   <Typography variant="body2">Uploader: {users[exam.uploader] || exam.uploader}</Typography>
-                  <Typography variant="body2">Εγκεκριμένο: {exam.approved ? 'Ναι' : 'Όχι'}</Typography>
+                  <Typography variant="body2">Status: {exam.approved ? 'Εγκεκριμένο' : 'Εκκρεμεί'}</Typography>
                 </CardContent>
                 <CardActions>
-                  {!exam.approved && (
-                    <Button variant="outlined" color="success" size="small" onClick={() => handleApprove(exam.id)} fullWidth>
-                      APPROVE
-                    </Button>
-                  )}
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={() => handleDelete(exam.id, exam.file_url)}
-                    fullWidth
-                  >
-                    ΔΙΑΓΡΑΦΗ
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="info"
-                    size="small"
-                    href={exam.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    startIcon={<VisibilityIcon />}
-                    sx={{ mr: 1 }}
-                  >
-                    ΠΡΟΒΟΛΗ
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href={exam.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="small"
-                    fullWidth
-                  >
-                    DOWNLOAD
-                  </Button>
+                  <Stack direction="row" spacing={1}>
+                    {!exam.approved && (
+                      <Tooltip title="Έγκριση">
+                        <Button color="success" size="small" onClick={() => handleApprove(exam.id)} sx={{ textTransform: 'none' }}><DoneIcon /></Button>
+                      </Tooltip>
+                    )}
+                    <Tooltip title="Προβολή">
+                      <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><VisibilityIcon /></Button>
+                    </Tooltip>
+                    <Tooltip title="Λήψη">
+                      <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><DownloadIcon /></Button>
+                    </Tooltip>
+                    <Tooltip title="Διαγραφή">
+                      <Button color="error" size="small" onClick={() => handleOpenDelete(exam.id, exam.file_url)} sx={{ textTransform: 'none' }}><DeleteIcon /></Button>
+                    </Tooltip>
+                  </Stack>
                 </CardActions>
               </Card>
             ))
@@ -233,14 +227,12 @@ const AdminFiles = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ΤΙΤΛΟΣ</TableCell>
-                <TableCell>ΜΑΘΗΜΑ</TableCell>
-                <TableCell>ΕΤΟΣ</TableCell>
-                <TableCell>ΕΞΕΤΑΣΤΙΚΗ</TableCell>
-                <TableCell>UPLOADER</TableCell>
-                <TableCell>ΕΓΚΕΚΡΙΜΕΝΟ</TableCell>
-                <TableCell>ΛΗΨΗ</TableCell>
-                <TableCell>ΕΝΕΡΓΕΙΕΣ</TableCell>
+                <TableCell>Μάθημα</TableCell>
+                <TableCell>Έτος</TableCell>
+                <TableCell>Εξεταστική</TableCell>
+                <TableCell>Uploader</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Ενέργειες</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -251,45 +243,34 @@ const AdminFiles = () => {
               ) : (
                 paginatedExams.map((exam) => (
                   <TableRow key={exam.id}>
-                    <TableCell>{exam.title}</TableCell>
                     <TableCell>{exam.course}</TableCell>
                     <TableCell>{exam.year}</TableCell>
                     <TableCell>{exam.period}</TableCell>
                     <TableCell>{users[exam.uploader] || exam.uploader}</TableCell>
-                    <TableCell>{exam.approved ? 'Ναι' : 'Όχι'}</TableCell>
                     <TableCell>
-                      <Button
-                        variant="outlined"
-                        color="info"
-                        size="small"
-                        href={exam.file_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        startIcon={<VisibilityIcon />}
-                        sx={{ mr: 1 }}
-                      >
-                        ΠΡΟΒΟΛΗ
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        href={exam.file_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        size="small"
-                      >
-                        DOWNLOAD
-                      </Button>
+                      {exam.approved ? (
+                        <Chip label="Εγκεκριμένο" color="success" size="small" icon={<CheckCircleIcon />} />
+                      ) : (
+                        <Chip label="Εκκρεμεί" color="warning" size="small" icon={<HourglassEmptyIcon />} />
+                      )}
                     </TableCell>
                     <TableCell>
-                      {!exam.approved && (
-                        <Button variant="outlined" color="success" size="small" sx={{ mr: 1 }} onClick={() => handleApprove(exam.id)}>
-                          APPROVE
-                        </Button>
-                      )}
-                      <Button variant="outlined" color="error" size="small" onClick={() => handleDelete(exam.id, exam.file_url)}>
-                        ΔΙΑΓΡΑΦΗ
-                      </Button>
+                      <Stack direction="row" spacing={1}>
+                        {!exam.approved && (
+                          <Tooltip title="Έγκριση">
+                            <Button color="success" size="small" onClick={() => handleApprove(exam.id)} sx={{ textTransform: 'none' }}><DoneIcon /></Button>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Προβολή">
+                          <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><VisibilityIcon /></Button>
+                        </Tooltip>
+                        <Tooltip title="Λήψη">
+                          <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><DownloadIcon /></Button>
+                        </Tooltip>
+                        <Tooltip title="Διαγραφή">
+                          <Button color="error" size="small" onClick={() => handleOpenDelete(exam.id, exam.file_url)} sx={{ textTransform: 'none' }}><DeleteIcon /></Button>
+                        </Tooltip>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))
@@ -307,6 +288,14 @@ const AdminFiles = () => {
           />
         </TableContainer>
       )}
+      <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
+        <DialogTitle>Επιβεβαίωση Διαγραφής</DialogTitle>
+        <DialogContent>Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτό το αρχείο;</DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} sx={{ textTransform: 'none' }}>Ακύρωση</Button>
+          <Button onClick={handleConfirmDelete} color="error" sx={{ textTransform: 'none' }}>Διαγραφή</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
