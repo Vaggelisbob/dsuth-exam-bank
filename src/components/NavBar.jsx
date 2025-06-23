@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -100,7 +101,18 @@ const NavBar = () => {
                   </MenuItem>
                 </Menu>
               </>
-            ) : null}
+            ) : (
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{ mx: 1.5 }}
+              >
+                <LoginIcon />
+              </IconButton>
+            )}
           </Toolbar>
         </AppBar>
       )}
@@ -176,13 +188,14 @@ const NavBar = () => {
                   {menuItems.map((item, idx) => (
                     <ListItem key={idx} disablePadding>
                       {item.to ? (
+                        item.label === 'Είσοδος' ? null :
                         <ListItemButton component={Link} to={item.to}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Είσοδος' ? 'ΕΙΣΟΔΟΣ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
                         </ListItemButton>
                       ) : (
                         item.label === 'Αποσύνδεση' ? null :
                         <ListItemButton onClick={item.action}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Είσοδος' ? 'ΕΙΣΟΔΟΣ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'ΠΡΟΦΙΛ' ? 'ΠΡΟΦΙΛ' : item.label} />
                         </ListItemButton>
                       )}
                     </ListItem>
