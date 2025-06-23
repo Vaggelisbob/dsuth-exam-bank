@@ -144,8 +144,9 @@ const NavBar = () => {
                   <MenuItem onClick={handleProfile} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
                     Ρυθμίσεις Προφίλ
                   </MenuItem>
-                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
+                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%', m: 0, px: 2, py: 1.2 }}>
                     <ListItemIcon sx={{ color: 'error.main', minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><LogoutIcon fontSize="small" /></ListItemIcon>
+                    <span style={{ flex: 1, textAlign: 'center', fontWeight: 600, color: 'inherit', letterSpacing: 0.5 }}>ΑΠΟΣΥΝΔΕΣΗ</span>
                   </MenuItem>
                 </Menu>
               </>
@@ -209,8 +210,9 @@ const NavBar = () => {
                   <MenuItem onClick={handleProfile} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
                     Ρυθμίσεις Προφίλ
                   </MenuItem>
-                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
+                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%', m: 0, px: 2, py: 1.2 }}>
                     <ListItemIcon sx={{ color: 'error.main', minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><LogoutIcon fontSize="small" /></ListItemIcon>
+                    <span style={{ flex: 1, textAlign: 'center', fontWeight: 600, color: 'inherit', letterSpacing: 0.5 }}>ΑΠΟΣΥΝΔΕΣΗ</span>
                   </MenuItem>
                 </Menu>
               </>
