@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Alert, TablePagination, TextField, InputAdornment, Card, CardContent, CardActions, Stack, Skeleton } from '@mui/material';
 import { supabase } from '../../supabaseClient';
 import SearchIcon from '@mui/icons-material/Search';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const AdminFiles = () => {
   const [exams, setExams] = useState([]);
@@ -191,6 +192,18 @@ const AdminFiles = () => {
                     ΔΙΑΓΡΑΦΗ
                   </Button>
                   <Button
+                    variant="outlined"
+                    color="info"
+                    size="small"
+                    href={exam.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    startIcon={<VisibilityIcon />}
+                    sx={{ mr: 1 }}
+                  >
+                    ΠΡΟΒΟΛΗ
+                  </Button>
+                  <Button
                     variant="contained"
                     color="primary"
                     href={exam.file_url}
@@ -245,6 +258,18 @@ const AdminFiles = () => {
                     <TableCell>{users[exam.uploader] || exam.uploader}</TableCell>
                     <TableCell>{exam.approved ? 'Ναι' : 'Όχι'}</TableCell>
                     <TableCell>
+                      <Button
+                        variant="outlined"
+                        color="info"
+                        size="small"
+                        href={exam.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        startIcon={<VisibilityIcon />}
+                        sx={{ mr: 1 }}
+                      >
+                        ΠΡΟΒΟΛΗ
+                      </Button>
                       <Button
                         variant="contained"
                         color="primary"

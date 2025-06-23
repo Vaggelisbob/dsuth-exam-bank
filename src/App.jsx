@@ -10,6 +10,9 @@ import Profile from './pages/Profile';
 import NavBar from './components/NavBar';
 import React, { lazy, Suspense } from 'react';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminCourses from './pages/admin/AdminCourses';
+import Courses from './pages/Courses';
+import CourseFiles from './pages/CourseFiles';
 
 const theme = createTheme({
   palette: {
@@ -45,9 +48,12 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />}>
               <Route path="files" element={<Suspense fallback={<div>Loading...</div>}><AdminFiles /></Suspense>} />
               <Route path="users" element={<Suspense fallback={<div>Loading...</div>}><AdminUsers /></Suspense>} />
+              <Route path="courses" element={<AdminCourses />} />
             </Route>
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:id" element={<CourseFiles />} />
           </Routes>
         </Router>
       </Box>

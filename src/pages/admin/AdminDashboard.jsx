@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, Typography, Box, Button, IconButton, useTheme, useMediaQuery } from '@mui/material';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, Typography, Box, Button, IconButton, useTheme, useMediaQuery, ListItemButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import FolderIcon from '@mui/icons-material/Folder';
 import PeopleIcon from '@mui/icons-material/People';
 import HomeIcon from '@mui/icons-material/Home';
+import BookIcon from '@mui/icons-material/Book';
+import AdminCourses from './AdminCourses';
 
 const drawerWidth = 220;
 const collapsedWidth = 60;
@@ -13,6 +15,7 @@ const collapsedWidth = 60;
 const adminMenu = [
   { text: 'Διαχείριση Αρχείων', icon: <FolderIcon />, path: '/admin/files' },
   { text: 'Διαχείριση Χρηστών', icon: <PeopleIcon />, path: '/admin/users' },
+  { text: 'Διαχείριση Μαθημάτων', icon: <BookIcon />, path: '/admin/courses' },
 ];
 
 const AdminDashboard = () => {
@@ -51,8 +54,7 @@ const AdminDashboard = () => {
       </Box>
       <List>
         {adminMenu.map((item) => (
-          <ListItem
-            button
+          <ListItemButton
             key={item.text}
             selected={location.pathname === item.path}
             onClick={() => {
@@ -63,7 +65,7 @@ const AdminDashboard = () => {
           >
             <ListItemIcon sx={{ minWidth: 0, mr: drawerOpen || isMobile ? 2 : 'auto', justifyContent: 'center' }}>{item.icon}</ListItemIcon>
             {(drawerOpen || isMobile) && <ListItemText primary={item.text} />}
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Box>
