@@ -109,11 +109,16 @@ const NavBar = () => {
                     Τράπεζα UTH
                   </Typography>
                   <IconButton
-                    color="default"
-                    onClick={e => { e.stopPropagation(); setMobileOpen(false); }}
-                    sx={{ ml: 1 }}
+                    edge="end"
+                    aria-label="close"
+                    onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }}
+                    sx={{
+                      color: 'grey.700',
+                      position: 'absolute', right: 14, top: 14, p: 1.2,
+                      '&:focus, &:focus-visible': { outline: 'none !important', boxShadow: 'none !important', border: 'none !important' }
+                    }}
                   >
-                    <CloseIcon sx={{ color: '#222' }} />
+                    <CloseIcon fontSize="large" />
                   </IconButton>
                 </Box>
                 <List sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', p: 0, mt: 1 }}>
