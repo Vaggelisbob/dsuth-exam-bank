@@ -269,7 +269,7 @@ const Home = () => {
           pl: { xs: 3, sm: 5, md: 7 },
           pr: { xs: 3, sm: 5, md: 7 },
           width: '100%',
-          maxWidth: 800,
+          maxWidth: 1100,
           mx: 'auto',
           overflowX: 'clip',
         }}
