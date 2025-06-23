@@ -289,13 +289,13 @@ const Home = () => {
               anchor="bottom"
               open={filterDrawerOpen}
               onClose={() => setFilterDrawerOpen(false)}
-              PaperProps={{ sx: { borderTopLeftRadius: 16, borderTopRightRadius: 16, p: 2 } }}
+              PaperProps={{ sx: { borderTopLeftRadius: 16, borderTopRightRadius: 16, p: { xs: 2.5, sm: 4 }, pb: 3 } }}
             >
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>Φίλτρα</Typography>
                 <IconButton onClick={() => setFilterDrawerOpen(false)}><CloseIcon /></IconButton>
               </Box>
-              <Stack spacing={2}>
+              <Stack spacing={2.5}>
                 <TextField
                   label="ΕΞΑΜΗΝΟ"
                   select
@@ -438,7 +438,7 @@ const Home = () => {
         )}
         {loading ? (
           <Box sx={{ mt: 2 }}>
-            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: isUltraWide ? 4 : 0 }}>
+            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
               <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
                 <TableHead>
                   <TableRow>
@@ -464,7 +464,7 @@ const Home = () => {
             </TableContainer>
           </Box>
         ) : (
-          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: isUltraWide ? 4 : 0 }}>
+          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
             <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
               <TableHead>
                 <TableRow>
