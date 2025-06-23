@@ -266,8 +266,8 @@ const Home = () => {
         sx={{
           mt: 0,
           mb: 0,
-          pl: { xs: 2, sm: 2, md: 3 },
-          pr: { xs: 2, sm: 2, md: 3 },
+          pl: { xs: 3, sm: 5, md: 7 },
+          pr: { xs: 3, sm: 5, md: 7 },
           width: '100%',
           maxWidth: 800,
           mx: 'auto',
