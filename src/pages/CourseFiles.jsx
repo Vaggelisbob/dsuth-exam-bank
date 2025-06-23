@@ -50,7 +50,9 @@ const CourseFiles = () => {
         if (uploaderProfiles) {
           const map = {};
           uploaderProfiles.forEach(u => {
-            map[u.id] = (u.first_name || u.last_name) ? `${u.first_name || ''} ${u.last_name || ''}`.trim() : (u.email || u.id);
+            map[u.id] = (u.first_name || u.last_name)
+              ? `${u.first_name || ''} ${u.last_name || ''}`.trim()
+              : (u.email || u.id);
           });
           setUploaders(map);
         }
