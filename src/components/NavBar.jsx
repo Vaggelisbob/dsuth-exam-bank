@@ -13,6 +13,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Divider from '@mui/material/Divider';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -228,47 +230,77 @@ const NavBar = () => {
             <IconButton color="inherit" edge="end" onClick={() => setMobileOpen(true)} sx={{ mx: 1.5, '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none', border: 'none' } }}>
               <MenuIcon />
             </IconButton>
-            <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)}>
-              <Box sx={{ width: 220, position: 'relative' }} role="presentation" onClick={() => setMobileOpen(false)}>
-                <IconButton
-                  color="default"
-                  onClick={e => { e.stopPropagation(); setMobileOpen(false); }}
-                  sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, display: { xs: 'flex', md: 'none' } }}
-                >
-                  <CloseIcon sx={{ color: '#222' }} />
-                </IconButton>
-                <Box sx={{ height: 0, pt: '40px' }} />
-                <List sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <ListItemButton component={Link} to="/" sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                    <ListItemText primary="ΑΡΧΙΚΗ" sx={{ textAlign: 'center' }} />
+            <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)}
+              PaperProps={{
+                sx: {
+                  width: 260,
+                  borderTopLeftRadius: 24,
+                  borderBottomLeftRadius: 24,
+                  bgcolor: 'linear-gradient(135deg, #e3f0ff 0%, #f9fbff 100%)',
+                  boxShadow: 6,
+                  p: 0,
+                  overflow: 'hidden',
+                }
+              }}
+            >
+              <Box sx={{ width: '100%', position: 'relative', minHeight: '100vh', p: 0 }} role="presentation" onClick={() => setMobileOpen(false)}>
+                {/* Header with logo/title and close */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, py: 2, bgcolor: 'rgba(40,56,80,0.07)', borderBottom: '1px solid #e0e7ef' }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a237e', letterSpacing: 0.5 }}>
+                    Τράπεζα UTH
+                  </Typography>
+                  <IconButton
+                    color="default"
+                    onClick={e => { e.stopPropagation(); setMobileOpen(false); }}
+                    sx={{ ml: 1 }}
+                  >
+                    <CloseIcon sx={{ color: '#222' }} />
+                  </IconButton>
+                </Box>
+                <List sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', p: 0, mt: 1 }}>
+                  <ListItemButton component={Link} to="/" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#e3eaff' }, justifyContent: 'flex-start' }}>
+                    <ListItemIcon sx={{ minWidth: 36, color: '#1a237e' }}><HomeIcon /></ListItemIcon>
+                    <ListItemText primary="ΑΡΧΙΚΗ" sx={{ color: '#1a237e', fontWeight: 600 }} />
                   </ListItemButton>
-                  <Divider sx={{ width: '80%', mx: 'auto' }} />
-                  <ListItemButton component={Link} to="/courses" sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                    <ListItemText primary="ΜΑΘΗΜΑΤΑ" sx={{ textAlign: 'center' }} />
+                  <ListItemButton component={Link} to="/courses" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#e3eaff' }, justifyContent: 'flex-start' }}>
+                    <ListItemIcon sx={{ minWidth: 36, color: '#1976d2' }}><MenuBookIcon /></ListItemIcon>
+                    <ListItemText primary="ΜΑΘΗΜΑΤΑ" sx={{ color: '#1976d2', fontWeight: 600 }} />
                   </ListItemButton>
-                  <Divider sx={{ width: '80%', mx: 'auto' }} />
-                  <ListItemButton component={Link} to="/favorites" sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><FavoriteIcon color="error" /></ListItemIcon>
+                  <ListItemButton component={Link} to="/favorites" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#ffe3e3' }, justifyContent: 'flex-start' }}>
+                    <ListItemIcon sx={{ minWidth: 36, color: '#e53935' }}><FavoriteIcon /></ListItemIcon>
+                    <ListItemText primary="ΑΓΑΠΗΜΕΝΑ" sx={{ color: '#e53935', fontWeight: 600 }} />
                   </ListItemButton>
-                  <Divider sx={{ width: '80%', mx: 'auto' }} />
-                  {menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').map((item, idx, arr) => (
-                    <React.Fragment key={idx}>
-                      <ListItem disablePadding sx={{ justifyContent: 'center', display: 'flex' }}>
-                        {item.to ? (
-                          <ListItemButton component={Link} to={item.to} sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                            {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
-                          </ListItemButton>
-                        ) : (
-                          <ListItemButton onClick={item.action} sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                            {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
-                          </ListItemButton>
-                        )}
-                      </ListItem>
-                      {idx < menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').length - 1 && (
-                        <Divider sx={{ width: '80%', mx: 'auto' }} />
+                  <ListItemButton component={Link} to="/upload" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#e3f7e3' }, justifyContent: 'flex-start' }}>
+                    <ListItemIcon sx={{ minWidth: 36, color: '#43a047' }}><UploadFileIcon /></ListItemIcon>
+                    <ListItemText primary="ΑΝΕΒΑΣΜΑ" sx={{ color: '#43a047', fontWeight: 600 }} />
+                  </ListItemButton>
+                  {/* Divider */}
+                  <Divider sx={{ my: 1, mx: 2 }} />
+                  {/* Profile/Admin/Login/Logout */}
+                  {user && (
+                    <>
+                      {user.id === ADMIN_UID && (
+                        <ListItemButton component={Link} to="/admin" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#fffbe3' }, justifyContent: 'flex-start' }}>
+                          <ListItemIcon sx={{ minWidth: 36, color: '#fbc02d' }}><SettingsIcon /></ListItemIcon>
+                          <ListItemText primary="ΡΥΘΜΙΣΕΙΣ ADMIN" sx={{ color: '#fbc02d', fontWeight: 600 }} />
+                        </ListItemButton>
                       )}
-                    </React.Fragment>
-                  ))}
+                      <ListItemButton component={Link} to="/profile" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#e3eaff' }, justifyContent: 'flex-start' }}>
+                        <ListItemIcon sx={{ minWidth: 36, color: '#1976d2' }}><AccountCircle /></ListItemIcon>
+                        <ListItemText primary="ΡΥΘΜΙΣΕΙΣ ΠΡΟΦΙΛ" sx={{ color: '#1976d2', fontWeight: 600 }} />
+                      </ListItemButton>
+                      <ListItemButton onClick={handleLogout} sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#ffe3e3' }, justifyContent: 'flex-start' }}>
+                        <ListItemIcon sx={{ minWidth: 36, color: '#e53935' }}><LogoutIcon /></ListItemIcon>
+                        <ListItemText primary="ΑΠΟΣΥΝΔΕΣΗ" sx={{ color: '#e53935', fontWeight: 600 }} />
+                      </ListItemButton>
+                    </>
+                  )}
+                  {!user && (
+                    <ListItemButton component={Link} to="/login" sx={{ my: 0.5, mx: 2, borderRadius: 2, py: 1.5, px: 2, '&:hover': { bgcolor: '#e3eaff' }, justifyContent: 'flex-start' }}>
+                      <ListItemIcon sx={{ minWidth: 36, color: '#1976d2' }}><LoginIcon /></ListItemIcon>
+                      <ListItemText primary="ΕΙΣΟΔΟΣ" sx={{ color: '#1976d2', fontWeight: 600 }} />
+                    </ListItemButton>
+                  )}
                 </List>
               </Box>
             </Drawer>
