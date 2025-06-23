@@ -137,7 +137,7 @@ const Home = () => {
             marginLeft: '-50vw',
             marginRight: '-50vw',
             maxWidth: '100vw',
-            borderRadius: { xs: 4, md: 6 },
+            borderRadius: 0,
             boxShadow: { xs: 4, md: 8 },
             p: { xs: 2.5, sm: 5, md: 7 },
             mb: { xs: 4, md: 6 },
