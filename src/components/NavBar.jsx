@@ -12,6 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import Divider from '@mui/material/Divider';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -241,24 +242,32 @@ const NavBar = () => {
                   <ListItemButton component={Link} to="/" sx={{ justifyContent: 'center', textAlign: 'center' }}>
                     <ListItemText primary="ΑΡΧΙΚΗ" sx={{ textAlign: 'center' }} />
                   </ListItemButton>
+                  <Divider sx={{ width: '80%', mx: 'auto' }} />
                   <ListItemButton component={Link} to="/courses" sx={{ justifyContent: 'center', textAlign: 'center' }}>
                     <ListItemText primary="ΜΑΘΗΜΑΤΑ" sx={{ textAlign: 'center' }} />
                   </ListItemButton>
+                  <Divider sx={{ width: '80%', mx: 'auto' }} />
                   <ListItemButton component={Link} to="/favorites" sx={{ justifyContent: 'center', textAlign: 'center' }}>
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><FavoriteIcon color="error" /></ListItemIcon>
                   </ListItemButton>
-                  {menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').map((item, idx) => (
-                    <ListItem key={idx} disablePadding sx={{ justifyContent: 'center', display: 'flex' }}>
-                      {item.to ? (
-                        <ListItemButton component={Link} to={item.to} sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                          {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
-                        </ListItemButton>
-                      ) : (
-                        <ListItemButton onClick={item.action} sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                          {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
-                        </ListItemButton>
+                  <Divider sx={{ width: '80%', mx: 'auto' }} />
+                  {menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').map((item, idx, arr) => (
+                    <React.Fragment key={idx}>
+                      <ListItem disablePadding sx={{ justifyContent: 'center', display: 'flex' }}>
+                        {item.to ? (
+                          <ListItemButton component={Link} to={item.to} sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                            {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
+                          </ListItemButton>
+                        ) : (
+                          <ListItemButton onClick={item.action} sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                            {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
+                          </ListItemButton>
+                        )}
+                      </ListItem>
+                      {idx < menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').length - 1 && (
+                        <Divider sx={{ width: '80%', mx: 'auto' }} />
                       )}
-                    </ListItem>
+                    </React.Fragment>
                   ))}
                 </List>
               </Box>
