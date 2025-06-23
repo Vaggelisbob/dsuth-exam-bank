@@ -8,7 +8,7 @@ import AdminPanel from './pages/AdminPanel';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NavBar from './components/NavBar';
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCourses from './pages/admin/AdminCourses';
 import Courses from './pages/Courses';
@@ -37,6 +37,13 @@ const AdminFiles = lazy(() => import('./pages/admin/AdminFiles'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 
 function App() {
+  // Καθαρισμός του # από το URL μετά το Google OAuth login
+  useEffect(() => {
+    if (window.location.hash === '#') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
