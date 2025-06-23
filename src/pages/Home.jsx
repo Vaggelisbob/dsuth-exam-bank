@@ -262,13 +262,15 @@ const Home = () => {
       {/* Φίλτρα + Λίστα */}
       <Container
         disableGutters
-        maxWidth="lg"
+        maxWidth={false}
         sx={{
           mt: 0,
           mb: 0,
-          px: 0,
-          width: '100vw',
-          overflowX: 'hidden',
+          px: { xs: 1, sm: 2, md: 3 },
+          width: '100%',
+          maxWidth: 800,
+          mx: 'auto',
+          overflowX: 'clip',
         }}
       >
         {/* Header κάτω από το hero section */}
