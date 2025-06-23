@@ -13,6 +13,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCourses from './pages/admin/AdminCourses';
 import Courses from './pages/Courses';
 import CourseFiles from './pages/CourseFiles';
+import Footer from './components/Footer';
 
 const theme = createTheme({
   palette: {
@@ -55,6 +56,7 @@ function App() {
           <Route path="/courses/:id" element={<CourseFiles />} />
         </Routes>
       </Box>
+      <Footer />
     </ThemeProvider>
   );
 }

@@ -42,9 +42,9 @@ const AdminDashboard = () => {
             startIcon={<HomeIcon />}
             fullWidth
             onClick={() => navigate('/')}
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, textTransform: 'none' }}
           >
-            Επιστροφή στην Ιστοσελίδα
+            Επιστροφή στην ιστοσελίδα
           </Button>
         ) : (
           <IconButton color="primary" onClick={() => navigate('/')} sx={{ mb: 2 }}>
