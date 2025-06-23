@@ -251,7 +251,7 @@ const Home = () => {
                   px: 3,
                   py: 1.2,
                   borderRadius: 2,
-                  backgroundColor: '#fff',
+                  backgroundColor: 'transparent',
                   color: 'primary.main',
                   boxShadow: 'none',
                   borderWidth: 2,
