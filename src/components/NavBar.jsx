@@ -78,7 +78,7 @@ const NavBar = () => {
                   edge="end"
                   color="inherit"
                   onClick={handleMenu}
-                  sx={{ mx: 1.5 }}
+                  sx={{ mr: 1  }}
                 >
                   <AccountCircle />
                 </IconButton>
@@ -89,6 +89,11 @@ const NavBar = () => {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
+                  {user && (
+                    <MenuItem disabled sx={{ opacity: 1, fontWeight: 600, color: 'primary.main', fontSize: '0.97rem', cursor: 'default', pointerEvents: 'none' }}>
+                      {user.email}
+                    </MenuItem>
+                  )}
                   {user && user.id === ADMIN_UID && (
                     <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }, color: 'inherit' }}>
                       <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
@@ -109,7 +114,7 @@ const NavBar = () => {
                   color="inherit"
                   component={Link}
                   to="/login"
-                  sx={{ mx: 1.5 }}
+                  sx={{ mr: 3 }}
                 >
                   <LoginIcon />
                 </IconButton>
@@ -148,6 +153,11 @@ const NavBar = () => {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
+                  {user && (
+                    <MenuItem disabled sx={{ opacity: 1, fontWeight: 600, color: 'primary.main', fontSize: '0.97rem', cursor: 'default', pointerEvents: 'none' }}>
+                      {user.email}
+                    </MenuItem>
+                  )}
                   {user && user.id === ADMIN_UID && (
                     <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }, color: 'inherit' }}>
                       <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
@@ -178,37 +188,24 @@ const NavBar = () => {
                 >
                   <CloseIcon sx={{ color: '#222' }} />
                 </IconButton>
-                <Box sx={{ height: 0, pb: theme => theme.spacing(3) }} />
+                <Box sx={{ height: 0, pt: '40px' }} />
                 <List>
-                  <ListItem>
-                    <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 600 }}>
-                      {user ? user.email : ' '}
-                    </Typography>
-                  </ListItem>
                   <ListItemButton component={Link} to="/">
                     <ListItemText primary="ΑΡΧΙΚΗ" />
                   </ListItemButton>
-                  {menuItems.filter(item => item.label !== 'Είσοδος').map((item, idx) => (
+                  {menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').map((item, idx) => (
                     <ListItem key={idx} disablePadding>
                       {item.to ? (
                         <ListItemButton component={Link} to={item.to}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Είσοδος' ? 'ΕΙΣΟΔΟΣ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
                         </ListItemButton>
                       ) : (
-                        item.label === 'Αποσύνδεση' ? null :
                         <ListItemButton onClick={item.action}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Admin' ? 'Admin' : item.label === 'Είσοδος' ? 'ΕΙΣΟΔΟΣ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
                         </ListItemButton>
                       )}
                     </ListItem>
                   ))}
-                  {user ? (
-                    <>
-                      <ListItemButton onClick={handleLogout} sx={{ color: 'error.main', fontWeight: 600 }}>
-                        <ListItemIcon sx={{ color: 'error.main' }}><LogoutIcon fontSize="small" /></ListItemIcon>
-                      </ListItemButton>
-                    </>
-                  ) : null}
                 </List>
               </Box>
             </Drawer>
