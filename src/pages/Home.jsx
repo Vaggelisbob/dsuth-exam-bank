@@ -7,6 +7,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { useNavigate } from 'react-router-dom';
 
 const periods = ['Ιανουάριος', 'Ιούνιος', 'Σεπτέμβριος'];
@@ -87,116 +88,128 @@ const Home = () => {
         {/* Hero Section */}
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            width: '100%',
+            maxWidth: 1400,
+            mx: 'auto',
+            borderRadius: { xs: 3, md: 6 },
+            boxShadow: { xs: 2, md: 6 },
+            p: { xs: 2, sm: 4, md: 6 },
             mb: { xs: 4, md: 6 },
-            gap: { xs: 2, md: 6 },
+            minHeight: { xs: 320, md: 340 },
+            position: 'relative',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: `linear-gradient(120deg, #e3eafcbb 60%, #f4f6f8cc 100%), url('https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat`,
           }}
         >
-          <Box sx={{ flex: 1 }}>
-            {loading ? (
-              <>
-                <Skeleton variant="text" width={isMobile ? '80%' : isTablet ? '60%' : '50%'} height={isMobile ? 40 : 64} sx={{ mb: 1, borderRadius: 2 }} />
-                <Skeleton variant="text" width={isMobile ? '60%' : '40%'} height={isMobile ? 28 : 40} sx={{ mb: 2, borderRadius: 2 }} />
-                <Skeleton variant="text" width={isMobile ? '90%' : '70%'} height={isMobile ? 24 : 32} sx={{ mb: 3, borderRadius: 2 }} />
-                <Skeleton variant="rectangular" width={isMobile ? '100%' : 220} height={48} sx={{ borderRadius: 2, mb: 2 }} />
-              </>
-            ) : (
-              <>
-                <Typography
-                  variant={isMobile ? 'h5' : isTablet ? 'h3' : isUltraWide ? 'h1' : 'h2'}
+          <Box sx={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 700, textAlign: { xs: 'center', md: 'left' } }}>
+            <Typography
+              variant={isMobile ? 'h5' : isTablet ? 'h3' : isUltraWide ? 'h1' : 'h2'}
+              color="primary"
+              gutterBottom
+              sx={{ fontWeight: 900, mb: 1, letterSpacing: '-1px', fontSize: isUltraWide ? '3.2rem' : undefined, textShadow: '0 2px 8px #e3eafc' }}
+            >
+              <SchoolIcon sx={{ fontSize: { xs: 36, md: 56, xl: 72 }, mr: 1, mb: -0.5, color: 'primary.main', verticalAlign: 'middle' }} />
+              Τράπεζα Θεμάτων UTH
+            </Typography>
+            <Typography
+              variant={isMobile ? 'body1' : 'h5'}
+              sx={{ mb: 2, color: 'text.secondary', fontWeight: 600, fontSize: isUltraWide ? '1.7rem' : undefined }}
+            >
+              ΨΗΦΙΑΚΑ ΣΥΣΤΗΜΑΤΑ ΠΘ
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ mb: 3, color: 'text.secondary', maxWidth: 600, fontSize: isUltraWide ? '1.25rem' : undefined, fontWeight: 500, mx: { xs: 'auto', md: 0 } }}
+            >
+              Βρες, κατέβασε ή μοιράσου θέματα και αρχεία προηγούμενων εξετάσεων της σχολής. Η γνώση ανήκει σε όλους!
+            </Typography>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2, width: '100%', maxWidth: 500, mx: { xs: 'auto', md: 0 } }}>
+              {user ? (
+                <Button
+                  variant="contained"
                   color="primary"
-                  gutterBottom
-                  sx={{ fontWeight: 800, mb: 1, letterSpacing: '-1px', fontSize: isUltraWide ? '3.2rem' : undefined }}
-                >
-                  <SchoolIcon sx={{ fontSize: { xs: 36, md: 48, xl: 64 }, mr: 1, mb: -0.5, color: 'primary.main' }} />
-                  Τράπεζα Θεμάτων UTH
-                </Typography>
-                <Typography
-                  variant={isMobile ? 'body1' : 'h5'}
-                  sx={{ mb: 2, color: 'text.secondary', fontWeight: 500, fontSize: isUltraWide ? '1.7rem' : undefined }}
-                >
-                  ΨΗΦΙΑΚΑ ΣΥΣΤΗΜΑΤΑ ΠΘ
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{ mb: 3, color: 'text.secondary', maxWidth: 600, fontSize: isUltraWide ? '1.25rem' : undefined }}
-                >
-                  Βρες, κατέβασε ή μοιράσου θέματα και αρχεία προηγούμενων εξετάσεων της σχολής. Η γνώση ανήκει σε όλους!
-                </Typography>
-                {user ? (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    startIcon={<UploadFileIcon />}
-                    href="/upload"
-                    sx={{
-                      fontWeight: 600,
-                      fontSize: isUltraWide ? '1.2rem' : undefined,
-                      px: 3,
-                      py: 1.2,
-                      borderRadius: 2,
-                      backgroundColor: 'primary.main',
-                      color: '#fff',
+                  size="large"
+                  startIcon={<UploadFileIcon />}
+                  href="/upload"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: isUltraWide ? '1.2rem' : undefined,
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: 2,
+                    backgroundColor: 'primary.main',
+                    color: '#fff',
+                    boxShadow: 'none',
+                    transition: 'background 0.2s, color 0.2s',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0,0,0,0.08)',
+                      color: 'primary.main',
                       boxShadow: 'none',
-                      transition: 'background 0.2s, color 0.2s',
-                      '&:hover': {
-                        backgroundColor: 'rgba(0,0,0,0.08)',
-                        color: 'primary.main',
-                        boxShadow: 'none',
-                      },
-                    }}
-                  >
-                    ΑΝΕΒΑΣΕ ΘΕΜΑ
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    href="/login"
-                    sx={{
-                      fontWeight: 600,
-                      fontSize: isUltraWide ? '1.2rem' : undefined,
-                      px: 3,
-                      py: 1.2,
-                      borderRadius: 2,
-                      backgroundColor: 'primary.main',
-                      color: '#fff',
+                    },
+                    width: { xs: '100%', sm: 'auto' },
+                  }}
+                >
+                  ΑΝΕΒΑΣΕ ΘΕΜΑ
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  href="/login"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: isUltraWide ? '1.2rem' : undefined,
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: 2,
+                    backgroundColor: 'primary.main',
+                    color: '#fff',
+                    boxShadow: 'none',
+                    transition: 'background 0.2s, color 0.2s',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0,0,0,0.04)',
+                      color: 'primary.main',
                       boxShadow: 'none',
-                      transition: 'background 0.2s, color 0.2s',
-                      '&:hover': {
-                        backgroundColor: 'rgba(0,0,0,0.04)',
-                        color: 'primary.main',
-                        boxShadow: 'none',
-                      },
-                    }}
-                  >
-                    ΣΥΝΔΕΣΗ ΓΙΑ ΑΝΕΒΑΣΜΑ
-                  </Button>
-                )}
-              </>
-            )}
-          </Box>
-          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            {loading ? (
-              <Skeleton variant="rectangular" width={isMobile ? 180 : 320} height={isMobile ? 120 : 220} sx={{ borderRadius: 4 }} />
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=500&q=80"
-                alt="university students"
-                style={{
-                  width: isMobile ? 180 : 320,
-                  maxWidth: '100%',
-                  borderRadius: 24,
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-                  objectFit: 'cover',
+                    },
+                    width: { xs: '100%', sm: 'auto' },
+                  }}
+                >
+                  ΣΥΝΔΕΣΗ ΓΙΑ ΑΝΕΒΑΣΜΑ
+                </Button>
+              )}
+              <Button
+                variant="outlined"
+                color="primary"
+                size="large"
+                startIcon={<MenuBookIcon />}
+                href="/courses"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: isUltraWide ? '1.2rem' : undefined,
+                  px: 3,
+                  py: 1.2,
+                  borderRadius: 2,
+                  backgroundColor: '#fff',
+                  color: 'primary.main',
+                  boxShadow: 'none',
+                  borderWidth: 2,
+                  borderColor: 'primary.main',
+                  transition: 'background 0.2s, color 0.2s',
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color: '#fff',
+                    boxShadow: 'none',
+                  },
+                  width: { xs: '100%', sm: 'auto' },
                 }}
-              />
-            )}
+              >
+                Δες τα μαθήματα
+              </Button>
+            </Stack>
           </Box>
         </Box>
         {/* Filters & List */}
