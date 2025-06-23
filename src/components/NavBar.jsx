@@ -10,6 +10,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -19,6 +20,8 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState(null);
+  const openSettings = Boolean(settingsAnchorEl);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -54,6 +57,12 @@ const NavBar = () => {
     await handleLogout();
     handleClose();
   };
+  const handleSettingsMenu = (event) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
+  const handleSettingsClose = () => {
+    setSettingsAnchorEl(null);
+  };
 
   const menuItems = [
     { label: 'Ανέβασμα', to: '/upload' },
@@ -73,8 +82,10 @@ const NavBar = () => {
           {/* Desktop */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <Button color="inherit" component={Link} to="/" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΑΡΧΙΚΗ</Button>
-            <Button color="inherit" component={Link} to="/upload" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΑΝΕΒΑΣΜΑ</Button>
             <Button color="inherit" component={Link} to="/courses" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΜΑΘΗΜΑΤΑ</Button>
+            <Button color="inherit" component={Link} to="/upload" sx={{ minWidth: 0, p: 1.2, '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>
+              <UploadFileIcon />
+            </Button>
             {user === undefined ? (
               <Skeleton variant="circular" width={40} height={40} sx={{ ml: 1, bgcolor: 'rgba(255,255,255,0.3)', pr: 2 }} />
             ) : user ? (
@@ -94,21 +105,53 @@ const NavBar = () => {
                   onClose={handleClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  PaperProps={{
+                    sx: {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      minWidth: 180,
+                      py: 1.2
+                    }
+                  }}
                 >
-                  {user && (
-                    <MenuItem disabled sx={{ opacity: 1, fontWeight: 600, color: 'primary.main', fontSize: '0.97rem', cursor: 'default', pointerEvents: 'none' }}>
-                      {user.email}
+                  <MenuItem disabled sx={{
+                    opacity: 1,
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '0.97rem',
+                    cursor: 'default',
+                    pointerEvents: 'none',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                    mb: 0.5
+                  }}>
+                    {user.email}
+                  </MenuItem>
+                  <MenuItem onClick={handleSettingsMenu} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><SettingsIcon fontSize="small" /></ListItemIcon>
+                  </MenuItem>
+                  <Menu
+                    anchorEl={settingsAnchorEl}
+                    open={openSettings}
+                    onClose={handleSettingsClose}
+                    anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  >
+                    {user && user.id === ADMIN_UID && (
+                      <MenuItem component={Link} to="/admin" onClick={() => { handleSettingsClose(); handleClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                        Ρυθμίσεις Admin
+                      </MenuItem>
+                    )}
+                    <MenuItem onClick={() => { handleProfile(); handleSettingsClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                      Ρυθμίσεις Προφίλ
                     </MenuItem>
-                  )}
-                  {user && user.id === ADMIN_UID && (
-                    <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }, color: 'inherit' }}>
-                      <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
-                      <span style={{ color: 'inherit' }}>Admin</span>
-                    </MenuItem>
-                  )}
-                  <MenuItem onClick={handleProfile}>ΠΡΟΦΙΛ</MenuItem>
-                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600 }}>
-                    <ListItemIcon sx={{ color: 'error.main' }}><LogoutIcon fontSize="small" /></ListItemIcon>
+                  </Menu>
+                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
+                    <ListItemIcon sx={{ color: 'error.main', minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><LogoutIcon fontSize="small" /></ListItemIcon>
                   </MenuItem>
                 </Menu>
               </>
@@ -138,21 +181,53 @@ const NavBar = () => {
                   onClose={handleClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  PaperProps={{
+                    sx: {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      minWidth: 180,
+                      py: 1.2
+                    }
+                  }}
                 >
-                  {user && (
-                    <MenuItem disabled sx={{ opacity: 1, fontWeight: 600, color: 'primary.main', fontSize: '0.97rem', cursor: 'default', pointerEvents: 'none' }}>
-                      {user.email}
+                  <MenuItem disabled sx={{
+                    opacity: 1,
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '0.97rem',
+                    cursor: 'default',
+                    pointerEvents: 'none',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                    mb: 0.5
+                  }}>
+                    {user.email}
+                  </MenuItem>
+                  <MenuItem onClick={handleSettingsMenu} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><SettingsIcon fontSize="small" /></ListItemIcon>
+                  </MenuItem>
+                  <Menu
+                    anchorEl={settingsAnchorEl}
+                    open={openSettings}
+                    onClose={handleSettingsClose}
+                    anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  >
+                    {user && user.id === ADMIN_UID && (
+                      <MenuItem component={Link} to="/admin" onClick={() => { handleSettingsClose(); handleClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                        Ρυθμίσεις Admin
+                      </MenuItem>
+                    )}
+                    <MenuItem onClick={() => { handleProfile(); handleSettingsClose(); }} sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: '100%' }}>
+                      Ρυθμίσεις Προφίλ
                     </MenuItem>
-                  )}
-                  {user && user.id === ADMIN_UID && (
-                    <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }, color: 'inherit' }}>
-                      <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
-                      <span style={{ color: 'inherit' }}>Admin</span>
-                    </MenuItem>
-                  )}
-                  <MenuItem onClick={handleProfile}>ΠΡΟΦΙΛ</MenuItem>
-                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600 }}>
-                    <ListItemIcon sx={{ color: 'error.main' }}><LogoutIcon fontSize="small" /></ListItemIcon>
+                  </Menu>
+                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600, justifyContent: 'center', alignItems: 'center', textAlign: 'center', display: 'flex', width: 40, height: 40, m: '0 auto' }}>
+                    <ListItemIcon sx={{ color: 'error.main', minWidth: 0, justifyContent: 'center', display: 'flex', mx: 'auto' }}><LogoutIcon fontSize="small" /></ListItemIcon>
                   </MenuItem>
                 </Menu>
               </>
@@ -182,19 +257,22 @@ const NavBar = () => {
                   <CloseIcon sx={{ color: '#222' }} />
                 </IconButton>
                 <Box sx={{ height: 0, pt: '40px' }} />
-                <List>
-                  <ListItemButton component={Link} to="/">
-                    <ListItemText primary="ΑΡΧΙΚΗ" />
+                <List sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <ListItemButton component={Link} to="/" sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                    <ListItemText primary="ΑΡΧΙΚΗ" sx={{ textAlign: 'center' }} />
+                  </ListItemButton>
+                  <ListItemButton component={Link} to="/courses" sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                    <ListItemText primary="ΜΑΘΗΜΑΤΑ" sx={{ textAlign: 'center' }} />
                   </ListItemButton>
                   {menuItems.filter(item => item.label !== 'Είσοδος' && item.label !== 'Admin' && item.label !== 'Αποσύνδεση').map((item, idx) => (
-                    <ListItem key={idx} disablePadding>
+                    <ListItem key={idx} disablePadding sx={{ justifyContent: 'center', display: 'flex' }}>
                       {item.to ? (
-                        <ListItemButton component={Link} to={item.to}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                        <ListItemButton component={Link} to={item.to} sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                          {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
                         </ListItemButton>
                       ) : (
-                        <ListItemButton onClick={item.action}>
-                          <ListItemText primary={item.label === 'Ανέβασμα' ? 'ΑΝΕΒΑΣΜΑ' : item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} />
+                        <ListItemButton onClick={item.action} sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                          {item.label === 'Ανέβασμα' ? <UploadFileIcon sx={{ mx: 'auto' }} /> : <ListItemText primary={item.label === 'Προφίλ' ? 'ΠΡΟΦΙΛ' : item.label} sx={{ textAlign: 'center' }} />}
                         </ListItemButton>
                       )}
                     </ListItem>
