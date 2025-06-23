@@ -18,7 +18,9 @@ const Home = () => {
   const [course, setCourse] = useState('');
   const [year, setYear] = useState('');
   const [period, setPeriod] = useState('');
+  const [semester, setSemester] = useState('');
   const [courses, setCourses] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [user, setUser] = useState(null);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
@@ -50,14 +52,24 @@ const Home = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const { data, error } = await supabase.from('exams').select('course').neq('course', '').eq('approved', true);
+      const { data, error } = await supabase.from('courses').select('*').order('semester, name', { ascending: true });
       if (!error && data) {
-        const uniqueCourses = [...new Set(data.map(x => x.course))];
-        setCourses(uniqueCourses);
+        setAllCourses(data);
       }
     };
     fetchCourses();
   }, []);
+
+  useEffect(() => {
+    if (!semester) {
+      setCourses(allCourses.map(c => c.name));
+    } else {
+      setCourses(allCourses.filter(c => c.semester === Number(semester)).map(c => c.name));
+      if (course && !allCourses.find(c => c.name === course && c.semester === Number(semester))) {
+        setCourse('');
+      }
+    }
+  }, [semester, allCourses]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -88,28 +100,43 @@ const Home = () => {
         {/* Hero Section */}
         <Box
           sx={{
-            width: '100%',
-            maxWidth: 1400,
-            mx: 'auto',
-            borderRadius: { xs: 3, md: 6 },
+            width: '100vw',
+            position: 'relative',
+            left: '50%',
+            right: '50%',
+            marginLeft: '-50vw',
+            marginRight: '-50vw',
+            maxWidth: '100vw',
+            borderRadius: 0,
             boxShadow: { xs: 2, md: 6 },
             p: { xs: 2, sm: 4, md: 6 },
             mb: { xs: 4, md: 6 },
             minHeight: { xs: 320, md: 340 },
-            position: 'relative',
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: `linear-gradient(120deg, #e3eafcbb 60%, #f4f6f8cc 100%), url('https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat`,
+            background: 'linear-gradient(120deg, #e3eafcbb 60%, #f4f6f8cc 100%)',
           }}
         >
-          <Box sx={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 700, textAlign: { xs: 'center', md: 'left' } }}>
+          <Box sx={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 700, textAlign: { xs: 'center', md: 'left' }, mx: 'auto' }}>
             <Typography
               variant={isMobile ? 'h5' : isTablet ? 'h3' : isUltraWide ? 'h1' : 'h2'}
               color="primary"
               gutterBottom
-              sx={{ fontWeight: 900, mb: 1, letterSpacing: '-1px', fontSize: isUltraWide ? '3.2rem' : undefined, textShadow: '0 2px 8px #e3eafc' }}
+              noWrap={false}
+              sx={{
+                fontWeight: 900,
+                mb: 1,
+                letterSpacing: '-1px',
+                fontSize: isUltraWide ? '3.2rem' : undefined,
+                textShadow: '0 2px 8px #e3eafc',
+                whiteSpace: !isMobile ? 'nowrap' : 'normal',
+                wordBreak: 'normal',
+                display: 'block',
+                width: '100%',
+                maxWidth: '100%',
+              }}
             >
               <SchoolIcon sx={{ fontSize: { xs: 36, md: 56, xl: 72 }, mr: 1, mb: -0.5, color: 'primary.main', verticalAlign: 'middle' }} />
               Τράπεζα Θεμάτων UTH
@@ -118,7 +145,7 @@ const Home = () => {
               variant={isMobile ? 'body1' : 'h5'}
               sx={{ mb: 2, color: 'text.secondary', fontWeight: 600, fontSize: isUltraWide ? '1.7rem' : undefined }}
             >
-              ΨΗΦΙΑΚΑ ΣΥΣΤΗΜΑΤΑ ΠΘ
+              ΨΗΦΙΑΚΑ ΣΥΣΤΗΜΑΤΑ, ΠΑΝΕΠΙΣΤΗΜΙΟ ΘΕΣΣΑΛΙΑΣ
             </Typography>
             <Typography
               variant="body1"
@@ -207,11 +234,15 @@ const Home = () => {
                   width: { xs: '100%', sm: 'auto' },
                 }}
               >
-                Δες τα μαθήματα
+                ΔΕΣ ΤΑ ΜΑΘΗΜΑΤΑ
               </Button>
             </Stack>
           </Box>
         </Box>
+        {/* Header κάτω από το hero section */}
+        <Typography variant="h6" align="center" sx={{ fontWeight: 700, mb: 3, color: 'primary.main', letterSpacing: 0.5 }}>
+          Βρες αρχεία εξετάσεων ανά εξάμηνο και μάθημα
+        </Typography>
         {/* Filters & List */}
         {isMobile ? (
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -234,6 +265,19 @@ const Home = () => {
                 <IconButton onClick={() => setFilterDrawerOpen(false)}><CloseIcon /></IconButton>
               </Box>
               <Stack spacing={2}>
+                <TextField
+                  label="ΕΞΑΜΗΝΟ"
+                  select
+                  value={semester}
+                  onChange={e => setSemester(e.target.value)}
+                  fullWidth
+                  size="small"
+                >
+                  <MenuItem value="">ΟΛΑ</MenuItem>
+                  {[...Array(8)].map((_, i) => (
+                    <MenuItem key={i + 1} value={i + 1}>{i + 1}ο Εξάμηνο</MenuItem>
+                  ))}
+                </TextField>
                 <TextField
                   label="ΜΑΘΗΜΑ"
                   select
@@ -270,13 +314,29 @@ const Home = () => {
                   fullWidth
                   size="large"
                 >
-                  ΚΑΘΑΡΙΣΜΟΣ
+                  ΚΑΘΑΡΙΣΜΑ
                 </Button>
               </Stack>
             </Drawer>
           </Box>
         ) : (
           <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3 }} alignItems="stretch">
+            <Grid item xs={12} sm={3} md={2} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
+              <TextField
+                label="ΕΞΑΜΗΝΟ"
+                select
+                value={semester}
+                onChange={e => setSemester(e.target.value)}
+                fullWidth
+                size={isMobile ? 'small' : 'medium'}
+                sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, whiteSpace: 'nowrap' }}
+              >
+                <MenuItem value="">ΟΛΑ</MenuItem>
+                {[...Array(8)].map((_, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>{i + 1}ο Εξάμηνο</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
             <Grid item xs={12} sm={4} md={3} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
               {loading ? (
                 <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 2 }} />
@@ -339,7 +399,7 @@ const Home = () => {
                   size={isMobile ? 'small' : 'medium'}
                   sx={{ height: '100%', fontSize: isUltraWide ? '1.1rem' : undefined, minHeight: 56 }}
                 >
-                  ΚΑΘΑΡΙΣΜΟΣ
+                  ΚΑΘΑΡΙΣΜΑ
                 </Button>
               )}
             </Grid>
