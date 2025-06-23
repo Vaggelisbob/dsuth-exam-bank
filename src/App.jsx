@@ -39,9 +39,24 @@ const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 function App() {
   // Καθαρισμός του # από το URL μετά το Google OAuth login
   useEffect(() => {
-    if (window.location.hash === '#') {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
+    // Ελέγχουμε για διάφορα hash patterns που μπορεί να προκύψουν από OAuth
+    const cleanHash = () => {
+      if (window.location.hash === '#' || 
+          window.location.hash === '#/' || 
+          window.location.hash.startsWith('#access_token') ||
+          window.location.hash.startsWith('#error')) {
+        // Χρησιμοποιούμε replaceState για καθαρό URL
+        const cleanUrl = window.location.pathname + window.location.search;
+        window.history.replaceState(null, '', cleanUrl);
+      }
+    };
+
+    // Καθαρίζουμε αμέσως
+    cleanHash();
+
+    // Καθαρίζουμε και μετά από λίγο για να πιάσουμε καθυστερημένα redirects
+    const timer = setTimeout(cleanHash, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
