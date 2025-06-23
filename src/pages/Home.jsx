@@ -94,6 +94,12 @@ const Home = () => {
       });
   }, [user]);
 
+  useEffect(() => {
+    if (window.location.hash === '#') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, []);
+
   const toggleExamFavorite = async (examId) => {
     if (!user) return;
     setFavLoading(true);
