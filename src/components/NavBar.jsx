@@ -65,67 +65,8 @@ const NavBar = () => {
 
   return (
     <>
-      {/* Top AppBar for mobile with profile icon */}
-      {isMobile && (
-        <AppBar position="fixed" sx={{ width: '100vw', zIndex: theme.zIndex.appBar + 1, boxShadow: 0, background: '#282828' }}>
-          <Toolbar sx={{ justifyContent: 'flex-end', minHeight: 48 }}>
-            {user === undefined ? (
-              <Skeleton variant="circular" width={36} height={36} sx={{ bgcolor: 'rgba(255,255,255,0.3)', mr: 1.5 }} />
-            ) : user ? (
-              <>
-                <IconButton
-                  size="large"
-                  edge="end"
-                  color="inherit"
-                  onClick={handleMenu}
-                  sx={{ mr: 1  }}
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                  {user && (
-                    <MenuItem disabled sx={{ opacity: 1, fontWeight: 600, color: 'primary.main', fontSize: '0.97rem', cursor: 'default', pointerEvents: 'none' }}>
-                      {user.email}
-                    </MenuItem>
-                  )}
-                  {user && user.id === ADMIN_UID && (
-                    <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }, color: 'inherit' }}>
-                      <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
-                      <span style={{ color: 'inherit' }}>Admin</span>
-                    </MenuItem>
-                  )}
-                  <MenuItem onClick={handleProfile}>ΠΡΟΦΙΛ</MenuItem>
-                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600 }}>
-                    <ListItemIcon sx={{ color: 'error.main' }}><LogoutIcon fontSize="small" /></ListItemIcon>
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <>
-                <IconButton
-                  size="large"
-                  edge="end"
-                  color="inherit"
-                  component={Link}
-                  to="/login"
-                  sx={{ mr: 3 }}
-                >
-                  <LoginIcon />
-                </IconButton>
-              </>
-            )}
-          </Toolbar>
-        </AppBar>
-      )}
-      {/* Main NavBar */}
-      <AppBar position="static" color="primary" sx={{ mt: isMobile ? theme.spacing(7) : 0, boxShadow: 0 }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <AppBar position="fixed" sx={{ top: 0, zIndex: theme.zIndex.appBar + 1, boxShadow: 0, background: '#282828' }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: { xs: 56, md: 64 }, p: 0 }}>
           <Typography variant="h6" component={Link} to="/" sx={{ color: '#fff', textDecoration: 'none', flexGrow: { xs: 1, sm: 0 }, px: 2, py: 0.5, borderRadius: 1.5, transition: 'background 0.2s', cursor: 'pointer', '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' } }}>
             Τράπεζα Θεμάτων UTH
           </Typography>
@@ -174,8 +115,59 @@ const NavBar = () => {
               <Button color="inherit" component={Link} to="/login" sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)', color: 'inherit' } }}>ΕΙΣΟΔΟΣ</Button>
             )}
           </Box>
-          {/* Mobile */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          {/* Mobile/Tablet */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+            {/* Profile/Login icon on the right */}
+            {user === undefined ? (
+              <Skeleton variant="circular" width={36} height={36} sx={{ bgcolor: 'rgba(255,255,255,0.3)', mr: 1 }} />
+            ) : user ? (
+              <>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  color="inherit"
+                  onClick={handleMenu}
+                  sx={{ mr: 1 }}
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  {user && (
+                    <MenuItem disabled sx={{ opacity: 1, fontWeight: 600, color: 'primary.main', fontSize: '0.97rem', cursor: 'default', pointerEvents: 'none' }}>
+                      {user.email}
+                    </MenuItem>
+                  )}
+                  {user && user.id === ADMIN_UID && (
+                    <MenuItem component={Link} to="/admin" onClick={handleClose} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }, color: 'inherit' }}>
+                      <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
+                      <span style={{ color: 'inherit' }}>Admin</span>
+                    </MenuItem>
+                  )}
+                  <MenuItem onClick={handleProfile}>ΠΡΟΦΙΛ</MenuItem>
+                  <MenuItem onClick={handleLogoutMenu} sx={{ color: 'error.main', fontWeight: 600 }}>
+                    <ListItemIcon sx={{ color: 'error.main' }}><LogoutIcon fontSize="small" /></ListItemIcon>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{ mr: 1 }}
+              >
+                <LoginIcon />
+              </IconButton>
+            )}
+            {/* Hamburger menu */}
             <IconButton color="inherit" edge="end" onClick={() => setMobileOpen(true)} sx={{ mx: 1.5, '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none', border: 'none' } }}>
               <MenuIcon />
             </IconButton>
