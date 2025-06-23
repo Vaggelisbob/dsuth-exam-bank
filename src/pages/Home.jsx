@@ -118,13 +118,14 @@ const Home = () => {
     }}>
       <Container
         disableGutters
-        maxWidth="xl"
+        maxWidth={false}
         sx={{
           mt: 0,
           mb: 0,
           px: 0,
-          width: '100vw',
-          overflowX: 'hidden',
+          width: '100%',
+          maxWidth: '100vw',
+          overflowX: 'clip',
         }}
       >
         {/* Hero Section */}
@@ -351,7 +352,7 @@ const Home = () => {
             </Drawer>
           </Box>
         ) : (
-          <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3 }} alignItems="stretch">
+          <Grid container spacing={isUltraWide ? 4 : isDesktop ? 3 : 2} sx={{ mb: 3, width: '100%', maxWidth: '100%', overflowX: 'auto', mx: 0 }} alignItems="stretch">
             <Grid item xs={12} sm={3} md={2} lg={2} xl={2} sx={{ minWidth: 0, flexGrow: 1 }}>
               <TextField
                 label="ΕΞΑΜΗΝΟ"
@@ -438,7 +439,7 @@ const Home = () => {
         )}
         {loading ? (
           <Box sx={{ mt: 2 }}>
-            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
+            <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100vw', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
               <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
                 <TableHead>
                   <TableRow>
@@ -464,7 +465,7 @@ const Home = () => {
             </TableContainer>
           </Box>
         ) : (
-          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100%', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
+          <TableContainer component={Paper} sx={{ mt: 2, width: '100%', maxWidth: '100vw', overflowX: 'auto', px: { xs: 1, sm: 2, md: 3, xl: isUltraWide ? 6 : 3 }, py: { xs: 1, sm: 2 }, boxShadow: 3, borderRadius: 3 }}>
             <Table size={isTablet ? 'small' : 'medium'} sx={{ minWidth: 0, width: '100%' }}>
               <TableHead>
                 <TableRow>
