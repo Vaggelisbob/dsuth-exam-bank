@@ -470,7 +470,7 @@ const Home = () => {
                   <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΜΑΘΗΜΑ</TableCell>
                   <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΤΟΣ</TableCell>
                   <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΞΕΤΑΣΤΙΚΗ</TableCell>
-                  <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΝΕΡΓΕΙΕΣ</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 600, fontSize: { xs: '0.9rem', md: '1rem', xl: isUltraWide ? '1.2rem' : undefined }, py: isUltraWide ? 2 : 1 }}>ΕΝΕΡΓΕΙΕΣ</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -484,7 +484,7 @@ const Home = () => {
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.course}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.year}</TableCell>
                       <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>{exam.period}</TableCell>
-                      <TableCell sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>
+                      <TableCell align="center" sx={{ fontSize: isUltraWide ? '1.1rem' : undefined, py: isUltraWide ? 2 : 1 }}>
                         <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
                           <Tooltip title="Προβολή">
                             <IconButton
