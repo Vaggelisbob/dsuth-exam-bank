@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, Skeleton, Stack, Divider, useTheme, IconButton, Badge, Chip, Tooltip } from '@mui/material';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
-const Courses = () => {
+const Favorites = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [examCounts, setExamCounts] = useState({});
   const [user, setUser] = useState(null);
   const [favorites, setFavorites] = useState([]); // ids των αγαπημένων μαθημάτων
-  const [favLoading, setFavLoading] = useState(false);
-  const navigate = useNavigate();
   const theme = useTheme();
+  const navigate = useNavigate();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -24,14 +22,28 @@ const Courses = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true);
-      const { data, error } = await supabase.from('courses').select('*').order('semester, name', { ascending: true });
-      if (!error && data) setCourses(data);
-      setLoading(false);
-    };
-    fetchCourses();
-  }, []);
+    if (!user) return;
+    setLoading(true);
+    // Φέρνουμε τα αγαπημένα course_ids
+    supabase
+      .from('favorites')
+      .select('course_id')
+      .eq('user_id', user.id)
+      .then(async ({ data, error }) => {
+        if (!error && data) {
+          const favIds = data.map(f => f.course_id);
+          setFavorites(favIds);
+          // Παίρνουμε τα courses
+          if (favIds.length > 0) {
+            const { data: courseData } = await supabase.from('courses').select('*').in('id', favIds);
+            setCourses(courseData || []);
+          } else {
+            setCourses([]);
+          }
+        }
+        setLoading(false);
+      });
+  }, [user]);
 
   useEffect(() => {
     const fetchExamCounts = async () => {
@@ -40,7 +52,6 @@ const Courses = () => {
         .select('course, id', { count: 'exact', head: false })
         .eq('approved', true);
       if (!error && data) {
-        // Μετράμε πόσα exams υπάρχουν για κάθε course
         const counts = {};
         data.forEach(e => {
           counts[e.course] = (counts[e.course] || 0) + 1;
@@ -50,38 +61,6 @@ const Courses = () => {
     };
     fetchExamCounts();
   }, []);
-
-  // Fetch favorites για τον χρήστη
-  useEffect(() => {
-    if (!user) return;
-    setFavLoading(true);
-    supabase
-      .from('favorites')
-      .select('course_id')
-      .eq('user_id', user.id)
-      .then(({ data, error }) => {
-        if (!error && data) {
-          setFavorites(data.map(f => f.course_id));
-        }
-        setFavLoading(false);
-      });
-  }, [user]);
-
-  // Προσθήκη/Αφαίρεση αγαπημένου
-  const toggleFavorite = async (courseId) => {
-    if (!user) return;
-    setFavLoading(true);
-    if (favorites.includes(courseId)) {
-      // Αφαίρεση
-      await supabase.from('favorites').delete().eq('user_id', user.id).eq('course_id', courseId);
-      setFavorites(favorites.filter(id => id !== courseId));
-    } else {
-      // Προσθήκη
-      await supabase.from('favorites').insert([{ user_id: user.id, course_id: courseId }]);
-      setFavorites([...favorites, courseId]);
-    }
-    setFavLoading(false);
-  };
 
   // Ομαδοποίηση ανά εξάμηνο
   const grouped = courses.reduce((acc, course) => {
@@ -93,12 +72,16 @@ const Courses = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" color="primary" gutterBottom align="center" sx={{ fontWeight: 700, letterSpacing: 1 }}>
-        Όλα τα Μαθήματα
+        Τα Αγαπημένα μου Μαθήματα
       </Typography>
       {loading ? (
         <Stack spacing={3}>
           {[1,2,3].map(i => <Skeleton key={i} variant="rounded" height={120} />)}
         </Stack>
+      ) : courses.length === 0 ? (
+        <Typography align="center" color="text.secondary" sx={{ mt: 6, fontSize: '1.2rem' }}>
+          Δεν έχεις προσθέσει ακόμα αγαπημένα μαθήματα.
+        </Typography>
       ) : (
         Object.keys(grouped).sort((a, b) => a - b).map(sem => (
           <Box key={sem} sx={{ mb: 5 }}>
@@ -134,11 +117,12 @@ const Courses = () => {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                   }}
+                  onClick={() => navigate(`/courses/${course.id}`)}
                 >
                   <CardContent sx={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1, px: 2, py: 2, pb: 1 }}>
                     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', gap: 2 }}>
                       <SchoolRoundedIcon color="primary" sx={{ fontSize: 40, flexShrink: 0, mr: 1 }} />
-                      <Box sx={{ flexGrow: 1, minWidth: 0, cursor: 'pointer' }} onClick={() => navigate(`/courses/${course.id}`)}>
+                      <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                         <Typography
                           variant="h6"
                           fontWeight={800}
@@ -162,19 +146,7 @@ const Courses = () => {
                         <InsertDriveFileIcon color="action" sx={{ fontSize: 28 }} />
                       </Badge>
                     </Tooltip>
-                    {user && (
-                      <Tooltip title={favorites.includes(course.id) ? 'Αφαίρεση από αγαπημένα' : 'Προσθήκη στα αγαπημένα'}>
-                        <IconButton
-                          aria-label={favorites.includes(course.id) ? 'Αφαίρεση από αγαπημένα' : 'Προσθήκη στα αγαπημένα'}
-                          onClick={e => { e.stopPropagation(); toggleFavorite(course.id); }}
-                          color="error"
-                          sx={{ transition: 'transform 0.15s', '&:hover': { transform: 'scale(1.18)' } }}
-                          disabled={favLoading}
-                        >
-                          {favorites.includes(course.id) ? <FavoriteIcon sx={{ fontSize: 28 }} /> : <FavoriteBorderIcon sx={{ fontSize: 28 }} />}
-                        </IconButton>
-                      </Tooltip>
-                    )}
+                    <FavoriteIcon color="error" sx={{ fontSize: 28 }} />
                   </Box>
                 </Card>
               ))}
@@ -186,4 +158,4 @@ const Courses = () => {
   );
 };
 
-export default Courses; 
+export default Favorites; 
