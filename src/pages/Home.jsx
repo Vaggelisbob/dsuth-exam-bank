@@ -137,16 +137,17 @@ const Home = () => {
             marginLeft: '-50vw',
             marginRight: '-50vw',
             maxWidth: '100vw',
-            borderRadius: 0,
-            boxShadow: { xs: 2, md: 6 },
-            p: { xs: 2, sm: 4, md: 6 },
+            borderRadius: { xs: 4, md: 6 },
+            boxShadow: { xs: 4, md: 8 },
+            p: { xs: 2.5, sm: 5, md: 7 },
             mb: { xs: 4, md: 6 },
             minHeight: { xs: 320, md: 340 },
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(120deg, #e3eafcbb 60%, #f4f6f8cc 100%)',
+            background: 'linear-gradient(135deg, #e3f0ff 0%, #c9e7ff 50%, #e0c3fc 100%)',
+            transition: 'background 0.5s',
           }}
         >
           <Box sx={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 700, textAlign: { xs: 'center', md: 'left' }, mx: 'auto' }}>
