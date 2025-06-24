@@ -41,7 +41,10 @@ const Login = () => {
     setError('');
     setMessage('');
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setError(error.message);
+    if (error) {
+      setError(error.message);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
     else {
       setMessage('Επιτυχής είσοδος!');
       enqueueSnackbar('Επιτυχής είσοδος!', { variant: 'success' });
@@ -59,6 +62,7 @@ const Login = () => {
       enqueueSnackbar('Επιτυχής είσοδος με Google!', { variant: 'success' });
     } catch (err) {
       setError('Σφάλμα με Google login');
+      enqueueSnackbar('Σφάλμα με Google login', { variant: 'error' });
     }
     setLoading(false);
   };
