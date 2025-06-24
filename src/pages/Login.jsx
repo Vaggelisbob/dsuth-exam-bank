@@ -58,8 +58,8 @@ const Login = () => {
     setError('');
     setMessage('');
     try {
+      localStorage.setItem('googleLoginSuccess', '1');
       await supabase.auth.signInWithOAuth({ provider: 'google' });
-      enqueueSnackbar('Επιτυχής είσοδος με Google!', { variant: 'success' });
     } catch (err) {
       setError('Σφάλμα με Google login');
       enqueueSnackbar('Σφάλμα με Google login', { variant: 'error' });
