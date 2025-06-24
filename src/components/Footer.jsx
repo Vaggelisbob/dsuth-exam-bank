@@ -23,7 +23,7 @@ const Footer = () => (
             Επικοινωνία
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-            Email: <Link href="mailto:info@dsuth-exam-bank.gr" underline="hover">info@dsuth-exam-bank.gr</Link>
+            Email: <Link href="mailto:dsuthexambank@gmail.com" underline="hover">dsuthexambank@gmail.com</Link>
           </Typography>
         </Box>
         <Box flex={1} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
