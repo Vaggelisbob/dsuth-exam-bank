@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Box, Card, CardContent, CardActions, Button, Skeleton, Stack, Alert, Tooltip, Avatar, useTheme } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, CardActions, Button, Skeleton, Stack, Alert, Tooltip, Avatar, useTheme, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useMediaQuery } from '@mui/material';
 import PictureAsPdfRoundedIcon from '@mui/icons-material/PictureAsPdfRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -22,6 +22,7 @@ const CourseFiles = () => {
   const [success, setSuccess] = useState('');
   const [uploaders, setUploaders] = useState({});
   const theme = useTheme();
+  const isMobileOrTablet = useMediaQuery('(max-width:899px)');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -95,54 +96,45 @@ const CourseFiles = () => {
           <SentimentDissatisfiedIcon color="disabled" sx={{ fontSize: 60, mb: 1 }} />
           <Typography variant="h6" color="text.secondary">Δεν υπάρχουν αρχεία για αυτό το μάθημα.</Typography>
         </Box>
-      ) : (
-        <Stack spacing={3}>
+      ) : isMobileOrTablet ? (
+        <Stack spacing={2} sx={{ mt: 2 }}>
           {files.map(file => (
-            <Card
-              key={file.id}
-              variant="outlined"
-              sx={{
-                borderRadius: 4,
-                boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
-                background: file.approved
-                  ? 'linear-gradient(120deg, rgba(227,240,255,0.85) 60%, rgba(201,231,255,0.85) 100%)'
-                  : 'linear-gradient(120deg, #fffbe6cc 60%, #ffd20033 100%)',
-                backdropFilter: 'blur(6px)',
-                borderColor: file.approved ? theme.palette.primary.light : theme.palette.secondary.main,
-                p: { xs: 2, sm: 3 },
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                gap: 2,
-                transition: 'box-shadow 0.2s, transform 0.2s',
-                '&:hover': { boxShadow: '0 12px 32px 0 rgba(31,38,135,0.18)', transform: 'translateY(-2px) scale(1.01)' },
-                minHeight: 140,
-              }}
-            >
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', px: 1, py: 1, borderBottom: '1.5px solid #e3eafc', bgcolor: 'rgba(255,255,255,0.45)', borderRadius: 2 }}>
-                <PictureAsPdfRoundedIcon color={file.approved ? 'primary' : 'warning'} sx={{ fontSize: 48, mb: 0.5 }} />
-                <Box sx={{ mt: 0.5 }}>
-                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
-                    PDF
-                  </Typography>
-                </Box>
+            <Box key={file.id} sx={{ background: '#f8fafc', boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)', borderRadius: '18px', border: '1px solid #e3eafc', p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>Έτος: <span style={{ fontWeight: 400 }}>{file.year}</span></Typography>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>Εξεταστική: <span style={{ fontWeight: 400 }}>{file.period}</span></Typography>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>Uploader: <span style={{ fontWeight: 400 }}>{uploaders[file.uploader] || file.uploader}</span></Typography>
+              <Box sx={{ mt: 1 }}>
+                <Button color="info" size="small" href={file.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' }, mr: 1 }}><VisibilityIcon /></Button>
+                <Button color="primary" size="small" href={file.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' }, mr: 1 }}><DownloadIcon /></Button>
+                {user && user.id === ADMIN_UID && !file.approved && (
+                  <Button variant="outlined" color="success" onClick={() => handleApprove(file.id)} size="small" sx={{ borderRadius: 1, mr: 1 }}><CheckIcon /></Button>
+                )}
+                {user && user.id === ADMIN_UID && (
+                  <Button variant="outlined" color="error" onClick={() => handleDelete(file.id, file.file_url)} size="small" sx={{ borderRadius: 1 }}><DeleteIcon /></Button>
+                )}
               </Box>
-              <CardContent sx={{ flex: 1, py: 1.5, px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'center', borderBottom: '1.5px solid #e3eafc', minWidth: 0, bgcolor: 'rgba(255,255,255,0.25)', borderRadius: 2 }}>
-                <Stack direction="column" alignItems="flex-start" spacing={1} justifyContent="space-between">
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight={700} sx={{ color: theme.palette.primary.dark }}>
-                      Έτος: {file.year} | Εξεταστική: {file.period}
-                    </Typography>
-                    <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 0.5 }}>
-                      <Avatar sx={{ width: 28, height: 28, bgcolor: theme.palette.primary.main, fontSize: 16, boxShadow: 2 }}>
-                        <PersonIcon fontSize="small" />
-                      </Avatar>
-                      <Box sx={{ bgcolor: '#fff', px: 1.5, py: 0.5, borderRadius: 2, boxShadow: 1, ml: -1, fontWeight: 600, fontSize: 14, color: 'primary.main', border: '1px solid #e3f0ff' }}>
-                        {uploaders[file.uploader] || file.uploader}
-                      </Box>
-                    </Stack>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+            </Box>
+          ))}
+        </Stack>
+      ) : (
+        <TableContainer component={Paper} sx={{ background: '#f8fafc', boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)', borderRadius: '18px', border: '1px solid #e3eafc', mt: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Έτος</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξεταστική</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Uploader</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {files.map(file => (
+                <TableRow key={file.id}>
+                  <TableCell>{file.year}</TableCell>
+                  <TableCell>{file.period}</TableCell>
+                  <TableCell>{uploaders[file.uploader] || file.uploader}</TableCell>
+                  <TableCell>
                     <Box sx={{
                       bgcolor: file.approved ? 'success.main' : 'warning.main',
                       color: '#fff',
@@ -153,57 +145,26 @@ const CourseFiles = () => {
                       fontSize: 13,
                       letterSpacing: 0.5,
                       boxShadow: 1,
+                      display: 'inline-block',
                     }}>
                       {file.approved ? 'Εγκεκριμένο' : 'Αναμονή έγκρισης'}
                     </Box>
-                  </Box>
-                </Stack>
-              </CardContent>
-              <CardActions sx={{ p: 1.5, flexDirection: 'row', gap: 1.2, width: '100%', justifyContent: 'center', alignItems: 'center', bgcolor: 'rgba(255,255,255,0.55)', borderRadius: 2, minHeight: 0 }}>
-                <Tooltip title="Προβολή PDF">
-                  <Button
-                    variant="outlined"
-                    color="info"
-                    href={file.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="medium"
-                    sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                  >
-                    <VisibilityIcon />
-                  </Button>
-                </Tooltip>
-                <Tooltip title="Λήψη PDF">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href={file.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="medium"
-                    sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                  >
-                    <DownloadIcon />
-                  </Button>
-                </Tooltip>
-                {user && user.id === ADMIN_UID && !file.approved && (
-                  <Tooltip title="Έγκριση αρχείου">
-                    <Button variant="outlined" color="success" onClick={() => handleApprove(file.id)} size="medium" sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <CheckIcon />
-                    </Button>
-                  </Tooltip>
-                )}
-                {user && user.id === ADMIN_UID && (
-                  <Tooltip title="Διαγραφή αρχείου">
-                    <Button variant="outlined" color="error" onClick={() => handleDelete(file.id, file.file_url)} size="medium" sx={{ minWidth: 44, width: 44, height: 44, borderRadius: '50%', boxShadow: 1, transition: 'all 0.15s', '&:hover': { boxShadow: 3 }, p: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <DeleteIcon />
-                    </Button>
-                  </Tooltip>
-                )}
-              </CardActions>
-            </Card>
-          ))}
-        </Stack>
+                  </TableCell>
+                  <TableCell>
+                    <Button color="info" size="small" href={file.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' }, mr: 1 }}><VisibilityIcon /></Button>
+                    <Button color="primary" size="small" href={file.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' }, mr: 1 }}><DownloadIcon /></Button>
+                    {user && user.id === ADMIN_UID && !file.approved && (
+                      <Button variant="outlined" color="success" onClick={() => handleApprove(file.id)} size="small" sx={{ borderRadius: 1, mr: 1 }}><CheckIcon /></Button>
+                    )}
+                    {user && user.id === ADMIN_UID && (
+                      <Button variant="outlined" color="error" onClick={() => handleDelete(file.id, file.file_url)} size="small" sx={{ borderRadius: 1 }}><DeleteIcon /></Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </Container>
   );
