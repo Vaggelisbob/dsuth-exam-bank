@@ -22,6 +22,13 @@ const AdminFiles = () => {
   const [tab, setTab] = useState(0);
   const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null, file_url: null });
 
+  const cardBg = {
+    background: '#f8fafc',
+    boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)',
+    borderRadius: '18px',
+    border: '1px solid #e3eafc',
+  };
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
     window.addEventListener('resize', handleResize);
@@ -101,7 +108,7 @@ const AdminFiles = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" color="secondary" gutterBottom align={isMobile ? 'center' : 'left'}>
+      <Typography variant="h4" color="#111" fontWeight={700} gutterBottom align="left">
         ΔΙΑΧΕΙΡΙΣΗ ΑΡΧΕΙΩΝ
       </Typography>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -149,7 +156,7 @@ const AdminFiles = () => {
               ))}
             </Stack>
           ) : (
-            <TableContainer component={Paper} sx={{ mt: 2 }}>
+            <TableContainer component={Paper} sx={{ ...cardBg, boxShadow: 'none', mt: 2 }}>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -183,7 +190,7 @@ const AdminFiles = () => {
             <Typography align="center">Δεν βρέθηκαν αρχεία.</Typography>
           ) : (
             paginatedExams.map((exam) => (
-              <Card key={exam.id} variant="outlined">
+              <Card key={exam.id} variant="outlined" sx={{ ...cardBg, mb: 2 }}>
                 <CardContent>
                   <Typography variant="body2">Μάθημα: {exam.course}</Typography>
                   <Typography variant="body2">Έτος: {exam.year}</Typography>
@@ -223,7 +230,7 @@ const AdminFiles = () => {
           />
         </Stack>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <TableContainer component={Paper} sx={{ ...cardBg, boxShadow: 'none', mt: 2 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -288,7 +295,7 @@ const AdminFiles = () => {
           />
         </TableContainer>
       )}
-      <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
+      <Dialog open={confirmDelete.open} onClose={handleCloseDelete} fullWidth maxWidth="xs" PaperProps={{ sx: { ...cardBg, p: 2 } }}>
         <DialogTitle>Επιβεβαίωση Διαγραφής</DialogTitle>
         <DialogContent>Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτό το αρχείο;</DialogContent>
         <DialogActions>

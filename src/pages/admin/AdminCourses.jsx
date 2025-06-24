@@ -5,6 +5,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { supabase } from '../../supabaseClient';
 
+const cardBg = {
+  background: '#f8fafc',
+  boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)',
+  borderRadius: '18px',
+  border: '1px solid #e3eafc',
+};
+
 const AdminCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,46 +90,50 @@ const AdminCourses = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h5" color="secondary" gutterBottom>
-        Διαχείριση Μαθημάτων
-      </Typography>
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
-      <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()} sx={{ mb: 2 }}>
-        Προσθήκη Μαθήματος
-      </Button>
-      {loading ? (
-        <Skeleton variant="rectangular" height={120} sx={{ borderRadius: 2 }} />
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Όνομα Μαθήματος</TableCell>
-                <TableCell>Εξάμηνο</TableCell>
-                <TableCell align="right">Ενέργειες</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {courses.length === 0 ? (
-                <TableRow><TableCell colSpan={3} align="center">Δεν υπάρχουν μαθήματα.</TableCell></TableRow>
-              ) : courses.map((course) => (
-                <TableRow key={course.id}>
-                  <TableCell>{course.name}</TableCell>
-                  <TableCell>{course.semester}</TableCell>
-                  <TableCell align="right">
-                    <IconButton onClick={() => handleOpenDialog(course)}><EditIcon /></IconButton>
-                    <IconButton color="error" onClick={() => handleDelete(course.id)}><DeleteIcon /></IconButton>
-                  </TableCell>
+    <Container maxWidth="sm" sx={{ mt: 4, mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', maxWidth: 600, ...cardBg, p: { xs: 2, sm: 4 }, mb: 2 }}>
+        <Typography variant="h4" color="#111" fontWeight={700} gutterBottom align="left" sx={{ letterSpacing: 1 }}>
+          Διαχείριση Μαθημάτων
+        </Typography>
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()} sx={{ mb: 2, borderRadius: 2, fontWeight: 600, fontSize: 16 }}>
+          Προσθήκη Μαθήματος
+        </Button>
+        {loading ? (
+          <Skeleton variant="rectangular" height={120} sx={{ borderRadius: 2 }} />
+        ) : (
+          <TableContainer component={Paper} sx={{ ...cardBg, boxShadow: 'none', mt: 2 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Όνομα Μαθήματος</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξάμηνο</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-      <Dialog open={dialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="xs">
-        <DialogTitle>{editCourse ? 'Επεξεργασία Μαθήματος' : 'Προσθήκη Μαθήματος'}</DialogTitle>
+              </TableHead>
+              <TableBody>
+                {courses.length === 0 ? (
+                  <TableRow><TableCell colSpan={3} align="center">Δεν υπάρχουν μαθήματα.</TableCell></TableRow>
+                ) : courses.map((course) => (
+                  <TableRow key={course.id}>
+                    <TableCell>{course.name}</TableCell>
+                    <TableCell>{course.semester}</TableCell>
+                    <TableCell align="right">
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+                        <IconButton onClick={() => handleOpenDialog(course)} color="primary"><EditIcon /></IconButton>
+                        <IconButton color="error" onClick={() => handleDelete(course.id)}><DeleteIcon /></IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="xs" PaperProps={{ sx: { ...cardBg, p: 2 } }}>
+        <DialogTitle sx={{ fontWeight: 700, color: '#1a237e', textAlign: 'center' }}>{editCourse ? 'Επεξεργασία Μαθήματος' : 'Προσθήκη Μαθήματος'}</DialogTitle>
         <DialogContent>
           <TextField
             label="Όνομα Μαθήματος"
@@ -130,7 +141,7 @@ const AdminCourses = () => {
             onChange={e => setCourseName(e.target.value)}
             fullWidth
             autoFocus
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, mb: 2 }}
           />
           <TextField
             label="Εξάμηνο"
@@ -138,13 +149,13 @@ const AdminCourses = () => {
             value={courseSemester}
             onChange={e => setCourseSemester(Number(e.target.value))}
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{ mb: 2 }}
             inputProps={{ min: 1, max: 8 }}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Ακύρωση</Button>
-          <Button onClick={handleSave} variant="contained" disabled={saving}>{editCourse ? 'Αποθήκευση' : 'Προσθήκη'}</Button>
+        <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+          <Button onClick={handleCloseDialog} sx={{ borderRadius: 2 }}>Ακύρωση</Button>
+          <Button onClick={handleSave} variant="contained" disabled={saving} sx={{ borderRadius: 2, fontWeight: 600 }}>{editCourse ? 'Αποθήκευση' : 'Προσθήκη'}</Button>
         </DialogActions>
       </Dialog>
     </Container>
