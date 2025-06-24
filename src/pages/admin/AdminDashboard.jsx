@@ -20,13 +20,11 @@ const adminMenu = [
   { text: 'Διαχείριση Μαθημάτων', icon: <BookIcon />, path: '/admin/courses' },
 ];
 
-const glassBg = {
-  background: 'rgba(255, 255, 255, 0.25)',
-  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)',
-  backdropFilter: 'blur(12px)',
-  WebkitBackdropFilter: 'blur(12px)',
-  borderRadius: '24px',
-  border: '1px solid rgba(255,255,255,0.18)',
+const cardBg = {
+  background: '#f8fafc',
+  boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)',
+  borderRadius: '18px',
+  border: '1px solid #e3eafc',
 };
 
 const AdminDashboard = () => {
@@ -43,7 +41,7 @@ const AdminDashboard = () => {
   };
 
   const drawerContent = (
-    <Box sx={{ ...glassBg, height: '100%', p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+    <Box sx={{ ...cardBg, height: '100%', p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
       <Box>
         <Toolbar />
         {(drawerOpen || isMobile) ? (
@@ -266,12 +264,11 @@ const AdminDashboard = () => {
           mx: 'auto',
           my: 'auto',
           p: { xs: 1, sm: 3 },
-          ...glassBg,
+          ...cardBg,
           minHeight: { xs: '70vh', sm: '75vh' },
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)',
         }}>
           <Outlet />
         </Box>

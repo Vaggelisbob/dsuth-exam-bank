@@ -11,6 +11,13 @@ const AdminUsers = () => {
   const [roleError, setRoleError] = useState('');
   const [roleSuccess, setRoleSuccess] = useState('');
 
+  const cardBg = {
+    background: '#f8fafc',
+    boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)',
+    borderRadius: '18px',
+    border: '1px solid #e3eafc',
+  };
+
   useEffect(() => {
     setUsersLoading(true);
     supabase.from('profiles').select('id,email,first_name,last_name,role').then(({ data, error }) => {
@@ -33,12 +40,12 @@ const AdminUsers = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" color="secondary" gutterBottom align="left">
+      <Typography variant="h4" color="#111" fontWeight={700} gutterBottom align="left">
         ΔΙΑΧΕΙΡΙΣΗ ΧΡΗΣΤΩΝ
       </Typography>
       {roleError && <Alert severity="error" sx={{ mb: 2 }}>{roleError}</Alert>}
       {roleSuccess && <Alert severity="success" sx={{ mb: 2 }}>{roleSuccess}</Alert>}
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+      <TableContainer component={Paper} sx={{ ...cardBg, mt: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
