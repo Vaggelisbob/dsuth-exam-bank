@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 // Επίσημο Google G logo
 const GoogleLogo = (
@@ -25,6 +26,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+  const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -38,8 +40,13 @@ const Register = () => {
     setError('');
     setMessage('');
     const { error } = await supabase.auth.signUp({ email, password });
-    if (error) setError(error.message);
-    else setMessage('Έγινε εγγραφή! Έλεγξε το email σου για επιβεβαίωση.');
+    if (error) {
+      setError(error.message);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    } else {
+      setMessage('Επιτυχής εγγραφή! Ελέγξτε το email σας.');
+      enqueueSnackbar('Επιτυχής εγγραφή! Ελέγξτε το email σας.', { variant: 'success' });
+    }
     setLoading(false);
   };
 
