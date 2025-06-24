@@ -5,6 +5,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { Turnstile } from '@marsidev/react-turnstile';
+import { validateTurnstileToken } from '../utils/turnstileValidation';
 
 // Επίσημο Google G logo
 const GoogleLogo = (
@@ -26,6 +28,8 @@ const Register = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [canSubmit, setCanSubmit] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
@@ -36,9 +40,24 @@ const Register = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      setError('Παρακαλώ ολοκληρώστε την επαλήθευση.');
+      enqueueSnackbar('Παρακαλώ ολοκληρώστε την επαλήθευση.', { variant: 'error' });
+      return;
+    }
     setLoading(true);
     setError('');
     setMessage('');
+    
+    // Server-side validation of Turnstile token
+    const validationResult = await validateTurnstileToken(turnstileToken);
+    if (!validationResult.success) {
+      setError('Η επαλήθευση απέτυχε. Παρακαλώ δοκιμάστε ξανά.');
+      enqueueSnackbar('Η επαλήθευση απέτυχε. Παρακαλώ δοκιμάστε ξανά.', { variant: 'error' });
+      setLoading(false);
+      return;
+    }
+    
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) {
       setError(error.message);
@@ -153,6 +172,25 @@ const Register = () => {
                 ),
               }}
             />
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+              <Turnstile
+                siteKey="0x4AAAAAABiQtKNjlTVw7zFL"
+                onSuccess={(token) => {
+                  setTurnstileToken(token);
+                  setCanSubmit(true);
+                }}
+                onExpire={() => {
+                  setTurnstileToken('');
+                  setCanSubmit(false);
+                }}
+                onError={() => {
+                  setTurnstileToken('');
+                  setCanSubmit(false);
+                }}
+                theme="light"
+                size="normal"
+              />
+            </Box>
             {error && <Alert severity="error">{error}</Alert>}
             {message && <Alert severity="success">{message}</Alert>}
             <Button
@@ -162,7 +200,7 @@ const Register = () => {
               sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
               onClick={handleSignUp}
               type="submit"
-              disabled={loading}
+              disabled={loading || !canSubmit}
             >
               ΕΓΓΡΑΦΗ
             </Button>

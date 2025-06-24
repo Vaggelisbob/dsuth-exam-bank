@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Button, TextField, MenuItem, Alert, CircularProgress, Stack, Skeleton, IconButton, Tooltip, Card, CardContent } from '@mui/material';
+import { Container, Typography, Box, Button, TextField, MenuItem, Alert, CircularProgress, Stack, Skeleton, IconButton, Tooltip, Card, CardContent, InputAdornment, Link as MuiLink, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Turnstile } from '@marsidev/react-turnstile';
+import { useSnackbar } from 'notistack';
+import { validateTurnstileToken } from '../utils/turnstileValidation';
 
 const periods = [
   'Ιανουάριος',
@@ -25,6 +28,9 @@ const Upload = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
   const [courses, setCourses] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(true);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [canSubmit, setCanSubmit] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -56,8 +62,22 @@ const Upload = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      setError('Παρακαλώ ολοκληρώστε την επαλήθευση.');
+      enqueueSnackbar('Παρακαλώ ολοκληρώστε την επαλήθευση.', { variant: 'error' });
+      return;
+    }
     setError('');
     setSuccess('');
+    
+    // Server-side validation of Turnstile token
+    const validationResult = await validateTurnstileToken(turnstileToken);
+    if (!validationResult.success) {
+      setError('Η επαλήθευση απέτυχε. Παρακαλώ δοκιμάστε ξανά.');
+      enqueueSnackbar('Η επαλήθευση απέτυχε. Παρακαλώ δοκιμάστε ξανά.', { variant: 'error' });
+      return;
+    }
+    
     if (!course || !year || !period || !file) {
       setError('Συμπλήρωσε όλα τα πεδία και επίλεξε αρχείο.');
       return;
@@ -240,6 +260,25 @@ const Upload = () => {
                 </Tooltip>
               </Box>
               {file && <Typography variant="body2" sx={{ mt: 1, textAlign: 'center' }}>{file.name}</Typography>}
+              <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+                <Turnstile
+                  siteKey="0x4AAAAAABiQtKNjlTVw7zFL"
+                  onSuccess={(token) => {
+                    setTurnstileToken(token);
+                    setCanSubmit(true);
+                  }}
+                  onExpire={() => {
+                    setTurnstileToken('');
+                    setCanSubmit(false);
+                  }}
+                  onError={() => {
+                    setTurnstileToken('');
+                    setCanSubmit(false);
+                  }}
+                  theme="light"
+                  size="normal"
+                />
+              </Box>
               {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
               {success && <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>}
               <Box sx={{ mt: 2, position: 'relative' }}>
@@ -247,7 +286,7 @@ const Upload = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={loading}
+                  disabled={loading || !canSubmit}
                   fullWidth
                   sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1, borderRadius: 2, fontWeight: 700, boxShadow: 2 }}
                 >
