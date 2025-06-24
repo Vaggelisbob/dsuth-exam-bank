@@ -8,6 +8,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import BadgeIcon from '@mui/icons-material/Badge';
+import { validatePassword } from '../utils/passwordValidation';
+import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -95,10 +97,14 @@ const Profile = () => {
   const handlePasswordChange = async () => {
     setPasswordError('');
     setPasswordSuccess('');
-    if (!newPassword || newPassword.length < 6) {
-      setPasswordError('Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.');
+    
+    // Password validation
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      setPasswordError('Ο κωδικός δεν πληροί τις απαιτήσεις ασφαλείας.');
       return;
     }
+    
     const { error: passErr } = await supabase.auth.updateUser({ password: newPassword });
     if (passErr) setPasswordError(passErr.message);
     else setPasswordSuccess('Ο κωδικός άλλαξε!');
@@ -263,11 +269,13 @@ const Profile = () => {
                     ),
                   }}
                 />
+                <PasswordStrengthIndicator password={newPassword} />
                 <Button
                   variant="contained"
                   color="#222"
                   onClick={handlePasswordChange}
                   fullWidth
+                  disabled={!validatePassword(newPassword).isValid}
                   sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
                 >
                   ΑΠΟΘΗΚΕΥΣΗ ΚΩΔΙΚΟΥ
