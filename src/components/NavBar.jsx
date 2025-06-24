@@ -86,14 +86,11 @@ const NavBar = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: { xs: 1, sm: 0 } }}>
             <Typography
               variant="h5"
+              className="navbar-title"
               sx={{
                 fontWeight: 800,
                 fontSize: { xs: 22, md: 28 },
-                background: 'linear-gradient(90deg, #1976d2 0%, #e040fb 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                textFillColor: 'transparent',
+                color: '#fff',
                 letterSpacing: 1.5,
                 userSelect: 'none',
                 textDecoration: 'none',
@@ -101,8 +98,6 @@ const NavBar = () => {
                 px: 2,
                 py: 0.5,
                 borderRadius: 1.5,
-                transition: 'background 0.2s',
-                '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }
               }}
               component={Link}
               to="/"
