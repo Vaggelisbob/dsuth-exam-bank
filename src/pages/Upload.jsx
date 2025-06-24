@@ -34,18 +34,10 @@ const Upload = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        navigate('/login');
-      } else {
-        setUser(data.session.user);
-      }
+      setUser(data?.session?.user || null);
     });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate('/login');
-      } else {
-        setUser(session.user);
-      }
+      setUser(session?.user || null);
     });
     return () => {
       listener?.subscription.unsubscribe();
@@ -128,7 +120,27 @@ const Upload = () => {
     </Container>
   );
 
-  if (!user) return null;
+  if (!user) return (
+    <Container maxWidth="sm" sx={{ mt: 8, mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', maxWidth: 420, mt: 6 }}>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h5" align="center" color="primary" fontWeight={700}>
+            Ανέβασμα Αρχείου
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ mb: 2 }}>
+            <Alert severity="info" sx={{ fontSize: 17, fontWeight: 500, textAlign: 'center', mb: 2 }}>
+              Για να ανεβάσετε αρχεία, πρέπει να συνδεθείτε.
+            </Alert>
+            <Button variant="contained" color="primary" fullWidth sx={{ fontWeight: 700, fontSize: 17 }} onClick={() => navigate('/login')}>
+              Σύνδεση
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    </Container>
+  );
 
   return (
     <Container maxWidth="sm" sx={{ mt: 6, mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
