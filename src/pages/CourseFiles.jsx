@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import PersonIcon from '@mui/icons-material/Person';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { supabase } from '../supabaseClient';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
@@ -84,6 +85,15 @@ const CourseFiles = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Button
+        startIcon={<ArrowBackIcon />}
+        variant="outlined"
+        color="primary"
+        onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign('/courses')}
+        sx={{ mb: 2, borderRadius: 2, fontWeight: 600, textTransform: 'none' }}
+      >
+        Πίσω
+      </Button>
       {course && <Typography variant="h5" color="primary" gutterBottom align="center" sx={{ fontWeight: 700 }}>{course.name} (Εξάμηνο {course.semester})</Typography>}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
