@@ -133,7 +133,7 @@ const Upload = () => {
             <Alert severity="info" sx={{ fontSize: 17, fontWeight: 500, textAlign: 'center', mb: 2 }}>
               Για να ανεβάσετε αρχεία, πρέπει να συνδεθείτε.
             </Alert>
-            <Button variant="contained" color="primary" fullWidth sx={{ fontWeight: 700, fontSize: 17 }} onClick={() => navigate('/login')}>
+            <Button variant="contained" color="primary" fullWidth sx={{ fontWeight: 700, fontSize: 17, textTransform: 'none' }} onClick={() => navigate('/login')}>
               Σύνδεση
             </Button>
           </Box>
