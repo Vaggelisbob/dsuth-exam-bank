@@ -11,6 +11,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 const periods = ['Ιανουάριος', 'Ιούνιος', 'Σεπτέμβριος'];
 
@@ -28,6 +29,7 @@ const Home = () => {
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [examFavorites, setExamFavorites] = useState([]);
   const [favLoading, setFavLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -93,6 +95,13 @@ const Home = () => {
         }
       });
   }, [user]);
+
+  useEffect(() => {
+    if (localStorage.getItem('googleLoginSuccess')) {
+      enqueueSnackbar('Επιτυχής είσοδος με Google!', { variant: 'success' });
+      localStorage.removeItem('googleLoginSuccess');
+    }
+  }, []);
 
   const toggleExamFavorite = async (examId) => {
     if (!user) return;
