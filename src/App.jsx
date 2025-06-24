@@ -16,6 +16,7 @@ import CourseFiles from './pages/CourseFiles';
 import Footer from './components/Footer';
 import Favorites from './pages/Favorites';
 import { SnackbarProvider } from 'notistack';
+import AdminUpload from './pages/admin/AdminUpload';
 
 const theme = createTheme({
   palette: {
@@ -60,6 +61,7 @@ function App() {
               <Route path="files" element={<Suspense fallback={<div>Loading...</div>}><AdminFiles /></Suspense>} />
               <Route path="users" element={<Suspense fallback={<div>Loading...</div>}><AdminUsers /></Suspense>} />
               <Route path="courses" element={<AdminCourses />} />
+              <Route path="upload" element={<AdminUpload />} />
             </Route>
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
