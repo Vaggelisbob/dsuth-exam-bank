@@ -15,6 +15,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import Divider from '@mui/material/Divider';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { useSnackbar } from 'notistack';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -28,6 +29,7 @@ const NavBar = () => {
   const openSettings = Boolean(settingsAnchorEl);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const session = supabase.auth.getSession().then(({ data }) => {
@@ -44,6 +46,7 @@ const NavBar = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    enqueueSnackbar('Αποσυνδεθήκατε με επιτυχία!', { variant: 'success' });
     navigate('/');
   };
 
