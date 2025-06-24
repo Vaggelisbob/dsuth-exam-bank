@@ -121,11 +121,12 @@ const Home = () => {
   return (
     <Box sx={{
       width: '100vw',
-      minHeight: '100dvh',
+      minHeight: '100vh',
       background: 'linear-gradient(135deg, #e3f0ff 0%, #f9fbff 100%)',
-      py: 0,
+      py: { xs: 0, sm: 0, md: 0 },
       overflowX: 'hidden',
       px: 0,
+      overflowY: 'auto',
     }}>
       {/* Hero section */}
       <Box
