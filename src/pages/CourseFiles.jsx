@@ -125,7 +125,7 @@ const CourseFiles = () => {
       >
         {downloadingAll ? 'Δημιουργία zip...' : 'Κατέβασμα όλων σε zip'}
       </Button>
-      {course && <Typography variant="h5" color="primary" gutterBottom align="center" sx={{ fontWeight: 700 }}>{course.name} (Εξάμηνο {course.semester})</Typography>}
+      {course && <Typography variant="h5" color="#222" gutterBottom align="center" sx={{ fontWeight: 700 }}>{course.name} (Εξάμηνο {course.semester})</Typography>}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
       {loading ? (
@@ -135,7 +135,7 @@ const CourseFiles = () => {
       ) : files.length === 0 ? (
         <Box sx={{ textAlign: 'center', mt: 6 }}>
           <SentimentDissatisfiedIcon color="disabled" sx={{ fontSize: 60, mb: 1 }} />
-          <Typography variant="h6" color="text.secondary">Δεν υπάρχουν αρχεία για αυτό το μάθημα.</Typography>
+          <Typography variant="h6" color="#222">Δεν υπάρχουν αρχεία για αυτό το μάθημα.</Typography>
         </Box>
       ) : isMobileOrTablet ? (
         <Stack spacing={2} sx={{ mt: 2 }}>
@@ -161,10 +161,10 @@ const CourseFiles = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Έτος</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξεταστική</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Status</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#222', fontSize: 16 }}>Έτος</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#222', fontSize: 16 }}>Εξεταστική</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#222', fontSize: 16 }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#222', fontSize: 16 }}>Ενέργειες</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

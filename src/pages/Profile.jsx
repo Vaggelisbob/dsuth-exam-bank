@@ -110,7 +110,7 @@ const Profile = () => {
     <Container maxWidth="sm" sx={{ mt: 6, mb: 4 }}>
       <Card variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
         <CardContent>
-          <Typography variant="h5" color="primary" gutterBottom>
+          <Typography variant="h5" color="#222" gutterBottom>
             ΠΡΟΦΙΛ ΧΡΗΣΤΗ
           </Typography>
           <Stack spacing={2}>
@@ -160,10 +160,10 @@ const Profile = () => {
               <PersonIcon sx={{ color: '#fff', fontSize: 48 }} />
             </Box>
           </Box>
-          <Typography variant="h5" color="primary" gutterBottom sx={{ fontWeight: 800, letterSpacing: '-1px', textAlign: 'center' }}>
+          <Typography variant="h5" color="#222" gutterBottom sx={{ fontWeight: 800, letterSpacing: '-1px', textAlign: 'center' }}>
             ΠΡΟΦΙΛ ΧΡΗΣΤΗ
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1, textAlign: 'center' }}>
+          <Typography variant="subtitle1" color="#222" sx={{ mb: 1, textAlign: 'center' }}>
             {user.email}
           </Typography>
         </Box>
@@ -177,7 +177,7 @@ const Profile = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <BadgeIcon color="primary" />
+                  <BadgeIcon color="#222" />
                 </InputAdornment>
               ),
             }}
@@ -191,7 +191,7 @@ const Profile = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <BadgeIcon color="primary" />
+                  <BadgeIcon color="#222" />
                 </InputAdornment>
               ),
             }}
@@ -204,7 +204,7 @@ const Profile = () => {
               readOnly: true,
               startAdornment: (
                 <InputAdornment position="start">
-                  <EmailIcon color="primary" />
+                  <EmailIcon color="#222" />
                 </InputAdornment>
               ),
             }}
@@ -233,7 +233,7 @@ const Profile = () => {
           )}
           <Button
             variant="outlined"
-            color="primary"
+            color="#222"
             onClick={() => setShowPasswordFields((v) => !v)}
             fullWidth
             sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
@@ -265,7 +265,7 @@ const Profile = () => {
                 />
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="#222"
                   onClick={handlePasswordChange}
                   fullWidth
                   sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}
@@ -283,7 +283,7 @@ const Profile = () => {
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 4, width: '100%' }}>
           <Button
             variant="contained"
-            color="primary"
+            color="#222"
             onClick={handleSave}
             fullWidth
             disabled={saving}
@@ -293,7 +293,7 @@ const Profile = () => {
           </Button>
           <Button
             variant="outlined"
-            color="error"
+            color="#222"
             onClick={async () => { await supabase.auth.signOut(); navigate('/'); }}
             fullWidth
             sx={{ fontWeight: 700, py: 1.2, borderRadius: 2 }}

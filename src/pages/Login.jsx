@@ -70,7 +70,7 @@ const Login = () => {
   if (loading) return (
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
+        <Typography variant="h5" color="#222" gutterBottom align={isMobile ? 'center' : 'left'}>
           ΕΙΣΟΔΟΣ
         </Typography>
         <Skeleton variant="rectangular" height={40} width="100%" sx={{ borderRadius: 2, mb: 2 }} />
@@ -89,7 +89,7 @@ const Login = () => {
   return (
     <Container maxWidth="xs" sx={{ mt: 8, mb: 4 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h5" color="primary" gutterBottom align={isMobile ? 'center' : 'left'}>
+        <Typography variant="h5" color="#222" gutterBottom align={isMobile ? 'center' : 'left'}>
           ΕΙΣΟΔΟΣ
         </Typography>
         <Button

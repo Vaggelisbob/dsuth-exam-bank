@@ -20,7 +20,7 @@ import { SnackbarProvider } from 'notistack';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#552222', // Νέο primary χρώμα
+      main: '#333', // Πιο απαλό μαύρο
     },
     secondary: {
       main: '#FFD200', // Χρυσό
