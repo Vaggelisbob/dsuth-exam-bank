@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Alert, TablePagination, TextField, InputAdornment, Card, CardContent, CardActions, Stack, Skeleton, Tabs, Tab, Chip, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Container, Typography, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Alert, TablePagination, TextField, InputAdornment, Card, CardContent, CardActions, Stack, Skeleton, Tabs, Tab, Chip, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, useMediaQuery } from '@mui/material';
 import { supabase } from '../../supabaseClient';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -138,34 +138,28 @@ const AdminFiles = () => {
           {isMobile ? (
             <Stack spacing={2}>
               {[...Array(3)].map((_, i) => (
-                <Card key={i} variant="outlined">
-                  <CardContent>
-                    <Skeleton variant="text" width="60%" height={32} sx={{ mb: 1 }} />
-                    <Skeleton variant="text" width="40%" height={24} />
-                    <Skeleton variant="text" width="30%" height={24} />
-                    <Skeleton variant="text" width="30%" height={24} />
-                    <Skeleton variant="text" width="60%" height={24} />
-                    <Skeleton variant="text" width="40%" height={24} />
-                  </CardContent>
-                  <CardActions>
-                    <Skeleton variant="rectangular" width="100%" height={36} />
-                    <Skeleton variant="rectangular" width="100%" height={36} />
-                    <Skeleton variant="rectangular" width="100%" height={36} />
-                  </CardActions>
-                </Card>
+                <Box key={i} sx={{ ...cardBg, mb: 2, p: 2 }}>
+                  <Skeleton variant="text" width="60%" height={32} sx={{ mb: 1 }} />
+                  <Skeleton variant="text" width="40%" height={24} />
+                  <Skeleton variant="text" width="30%" height={24} />
+                  <Skeleton variant="text" width="30%" height={24} />
+                  <Skeleton variant="text" width="60%" height={24} />
+                  <Skeleton variant="text" width="40%" height={24} />
+                  <Skeleton variant="rectangular" width="100%" height={36} sx={{ mt: 2 }} />
+                </Box>
               ))}
             </Stack>
           ) : (
             <TableContainer component={Paper} sx={{ ...cardBg, boxShadow: 'none', mt: 2 }}>
               <Table>
                 <TableHead>
-                  <TableRow>
-                    <TableCell>Μάθημα</TableCell>
-                    <TableCell>Έτος</TableCell>
-                    <TableCell>Εξεταστική</TableCell>
-                    <TableCell>Uploader</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Ενέργειες</TableCell>
+                  <TableRow sx={{ background: '#f4f6fa' }}>
+                    <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Μάθημα</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Έτος</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξεταστική</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Uploader</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -190,56 +184,50 @@ const AdminFiles = () => {
             <Typography align="center">Δεν βρέθηκαν αρχεία.</Typography>
           ) : (
             paginatedExams.map((exam) => (
-              <Card key={exam.id} variant="outlined" sx={{ ...cardBg, mb: 2 }}>
-                <CardContent>
-                  <Typography variant="body2">Μάθημα: {exam.course}</Typography>
-                  <Typography variant="body2">Έτος: {exam.year}</Typography>
-                  <Typography variant="body2">Εξεταστική: {exam.period}</Typography>
-                  <Typography variant="body2">Uploader: {users[exam.uploader] || exam.uploader}</Typography>
-                  <Typography variant="body2">Status: {exam.approved ? 'Εγκεκριμένο' : 'Εκκρεμεί'}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Stack direction="row" spacing={1}>
-                    {!exam.approved && (
-                      <Tooltip title="Έγκριση">
-                        <Button color="success" size="small" onClick={() => handleApprove(exam.id)} sx={{ textTransform: 'none' }}><DoneIcon /></Button>
-                      </Tooltip>
-                    )}
-                    <Tooltip title="Προβολή">
-                      <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><VisibilityIcon /></Button>
+              <Box key={exam.id} sx={{ ...cardBg, mb: 2, p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>Μάθημα: <span style={{ fontWeight: 400 }}>{exam.course}</span></Typography>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>Έτος: <span style={{ fontWeight: 400 }}>{exam.year}</span></Typography>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>Εξεταστική: <span style={{ fontWeight: 400 }}>{exam.period}</span></Typography>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>Uploader: <span style={{ fontWeight: 400 }}>{users[exam.uploader] || exam.uploader}</span></Typography>
+                <Box sx={{ mt: 1 }}>
+                  <Chip
+                    label={exam.approved ? 'Εγκεκριμένο' : 'Εκκρεμεί'}
+                    color={exam.approved ? 'success' : 'warning'}
+                    size="small"
+                    sx={{ fontWeight: 600, fontSize: 13, borderRadius: 1 }}
+                  />
+                </Box>
+                <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+                  {!exam.approved && (
+                    <Tooltip title="Έγκριση">
+                      <Button color="success" size="small" onClick={() => handleApprove(exam.id)} sx={{ textTransform: 'none', background: '#e8f5e9', borderRadius: 1, '&:hover': { background: '#c8e6c9' } }}><DoneIcon /></Button>
                     </Tooltip>
-                    <Tooltip title="Λήψη">
-                      <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><DownloadIcon /></Button>
-                    </Tooltip>
-                    <Tooltip title="Διαγραφή">
-                      <Button color="error" size="small" onClick={() => handleOpenDelete(exam.id, exam.file_url)} sx={{ textTransform: 'none' }}><DeleteIcon /></Button>
-                    </Tooltip>
-                  </Stack>
-                </CardActions>
-              </Card>
+                  )}
+                  <Tooltip title="Προβολή">
+                    <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' } }}><VisibilityIcon /></Button>
+                  </Tooltip>
+                  <Tooltip title="Διαγραφή">
+                    <Button color="error" size="small" onClick={() => handleOpenDelete(exam.id, exam.file_url)} sx={{ textTransform: 'none', background: '#ffebee', borderRadius: 1, '&:hover': { background: '#ffcdd2' } }}><DeleteIcon /></Button>
+                  </Tooltip>
+                  <Tooltip title="Λήψη">
+                    <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' } }}><DownloadIcon /></Button>
+                  </Tooltip>
+                </Stack>
+              </Box>
             ))
           )}
-          <TablePagination
-            component="div"
-            count={filteredExams.length}
-            page={page}
-            onPageChange={(_e, newPage) => setPage(newPage)}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={e => { setRowsPerPage(parseInt(e.target.value, 10)); setPage(0); }}
-            rowsPerPageOptions={[5, 10, 25, 50]}
-          />
         </Stack>
       ) : (
         <TableContainer component={Paper} sx={{ ...cardBg, boxShadow: 'none', mt: 2 }}>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Μάθημα</TableCell>
-                <TableCell>Έτος</TableCell>
-                <TableCell>Εξεταστική</TableCell>
-                <TableCell>Uploader</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Ενέργειες</TableCell>
+              <TableRow sx={{ background: '#f4f6fa' }}>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Μάθημα</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Έτος</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξεταστική</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Uploader</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -255,27 +243,28 @@ const AdminFiles = () => {
                     <TableCell>{exam.period}</TableCell>
                     <TableCell>{users[exam.uploader] || exam.uploader}</TableCell>
                     <TableCell>
-                      {exam.approved ? (
-                        <Chip label="Εγκεκριμένο" color="success" size="small" icon={<CheckCircleIcon />} />
-                      ) : (
-                        <Chip label="Εκκρεμεί" color="warning" size="small" icon={<HourglassEmptyIcon />} />
-                      )}
+                      <Chip
+                        label={exam.approved ? 'Εγκεκριμένο' : 'Εκκρεμεί'}
+                        color={exam.approved ? 'success' : 'warning'}
+                        size="small"
+                        sx={{ fontWeight: 600, fontSize: 13, borderRadius: 1 }}
+                      />
                     </TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={1}>
                         {!exam.approved && (
                           <Tooltip title="Έγκριση">
-                            <Button color="success" size="small" onClick={() => handleApprove(exam.id)} sx={{ textTransform: 'none' }}><DoneIcon /></Button>
+                            <Button color="success" size="small" onClick={() => handleApprove(exam.id)} sx={{ textTransform: 'none', background: '#e8f5e9', borderRadius: 1, '&:hover': { background: '#c8e6c9' } }}><DoneIcon /></Button>
                           </Tooltip>
                         )}
                         <Tooltip title="Προβολή">
-                          <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><VisibilityIcon /></Button>
-                        </Tooltip>
-                        <Tooltip title="Λήψη">
-                          <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none' }}><DownloadIcon /></Button>
+                          <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' } }}><VisibilityIcon /></Button>
                         </Tooltip>
                         <Tooltip title="Διαγραφή">
-                          <Button color="error" size="small" onClick={() => handleOpenDelete(exam.id, exam.file_url)} sx={{ textTransform: 'none' }}><DeleteIcon /></Button>
+                          <Button color="error" size="small" onClick={() => handleOpenDelete(exam.id, exam.file_url)} sx={{ textTransform: 'none', background: '#ffebee', borderRadius: 1, '&:hover': { background: '#ffcdd2' } }}><DeleteIcon /></Button>
+                        </Tooltip>
+                        <Tooltip title="Λήψη">
+                          <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' } }}><DownloadIcon /></Button>
                         </Tooltip>
                       </Stack>
                     </TableCell>
