@@ -266,7 +266,7 @@ const Home = () => {
                 width: { xs: '100%', sm: 'auto' },
               }}
             >
-              ΔΕΣ ΤΑ ΜΑΘΗΜΑΤΑ
+              ΔΕΣ ΤΑ ΜΑΘΗΜΑΤΑ 
             </Button>
           </Stack>
         </Box>
