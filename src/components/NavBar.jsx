@@ -83,9 +83,33 @@ const NavBar = () => {
     <>
       <AppBar position="fixed" sx={{ top: 0, zIndex: theme.zIndex.appBar + 1, boxShadow: 0, background: '#282828' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: { xs: 56, md: 64 }, p: 0 }}>
-          <Typography variant="h6" component={Link} to="/" sx={{ color: '#fff', textDecoration: 'none', flexGrow: { xs: 1, sm: 0 }, px: 2, py: 0.5, borderRadius: 1.5, transition: 'background 0.2s', cursor: 'pointer', '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' } }}>
-            Τράπεζα Θεμάτων UTH
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: { xs: 1, sm: 0 } }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 800,
+                fontSize: { xs: 22, md: 28 },
+                background: 'linear-gradient(90deg, #1976d2 0%, #e040fb 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textFillColor: 'transparent',
+                letterSpacing: 1.5,
+                userSelect: 'none',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                px: 2,
+                py: 0.5,
+                borderRadius: 1.5,
+                transition: 'background 0.2s',
+                '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }
+              }}
+              component={Link}
+              to="/"
+            >
+              DSUth Exam Bank
+            </Typography>
+          </Box>
           {/* Mobile/Tablet */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {/* Hamburger menu μόνο */}
