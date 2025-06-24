@@ -19,7 +19,7 @@ const adminMenu = [
   { text: 'Διαχείριση Αρχείων', icon: <FolderIcon />, path: '/admin/files' },
   { text: 'Διαχείριση Χρηστών', icon: <PeopleIcon />, path: '/admin/users' },
   { text: 'Διαχείριση Μαθημάτων', icon: <BookIcon />, path: '/admin/courses' },
-  { text: 'Μαζικό Upload', icon: <CloudUploadIcon />, path: '/admin/upload' },
+  { text: 'Μαζικό Upload', icon: <CloudUploadIcon sx={{ transition: 'transform 0.2s' }} />, path: '/admin/upload' },
 ];
 
 const cardBg = {
