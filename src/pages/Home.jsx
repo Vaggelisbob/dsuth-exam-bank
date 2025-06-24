@@ -466,7 +466,6 @@ const Home = () => {
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>Μάθημα: <span style={{ fontWeight: 400 }}>{exam.course}</span></Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>Έτος: <span style={{ fontWeight: 400 }}>{exam.year}</span></Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>Εξεταστική: <span style={{ fontWeight: 400 }}>{exam.period}</span></Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>Uploader: <span style={{ fontWeight: 400 }}>{exam.uploader}</span></Typography>
                   <Box sx={{ mt: 1 }}>
                     <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' }, mr: 1 }}><VisibilityIcon /></Button>
                     <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' }, mr: 1 }}><DownloadIcon /></Button>
@@ -486,7 +485,6 @@ const Home = () => {
                   <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Μάθημα</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Έτος</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξεταστική</TableCell>
-                  <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Uploader</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
                 </TableRow>
               </TableHead>
@@ -498,7 +496,6 @@ const Home = () => {
                     <TableCell>{exam.course}</TableCell>
                     <TableCell>{exam.year}</TableCell>
                     <TableCell>{exam.period}</TableCell>
-                    <TableCell>{exam.uploader}</TableCell>
                     <TableCell>
                       <Button color="info" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' }, mr: 1 }}><VisibilityIcon /></Button>
                       <Button color="primary" size="small" href={exam.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' }, mr: 1 }}><DownloadIcon /></Button>

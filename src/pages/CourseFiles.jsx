@@ -10,6 +10,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { supabase } from '../supabaseClient';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const ADMIN_UID = 'ae26da15-7102-4647-8cbb-8f045491433c';
 
@@ -22,6 +24,7 @@ const CourseFiles = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [uploaders, setUploaders] = useState({});
+  const [downloadingAll, setDownloadingAll] = useState(false);
   const theme = useTheme();
   const isMobileOrTablet = useMediaQuery('(max-width:899px)');
 
@@ -83,6 +86,25 @@ const CourseFiles = () => {
     else { setSuccess('Διαγράφηκε!'); setFiles(files => files.filter(f => f.id !== fileId)); }
   };
 
+  const handleDownloadAll = async () => {
+    setDownloadingAll(true);
+    const zip = new JSZip();
+    // Προσθέτουμε κάθε αρχείο στο zip
+    await Promise.all(files.map(async (file) => {
+      try {
+        const response = await fetch(file.file_url);
+        const blob = await response.blob();
+        // Όνομα αρχείου: <course>_<year>_<period>_<id>.pdf
+        const safeCourse = (course?.name || 'file').replace(/[^a-zA-Z0-9_\-]/g, '_');
+        const filename = `${safeCourse}_${file.year}_${file.period}_${file.id}.pdf`;
+        zip.file(filename, blob);
+      } catch (e) {}
+    }));
+    const content = await zip.generateAsync({ type: 'blob' });
+    saveAs(content, `${course?.name || 'files'}.zip`);
+    setDownloadingAll(false);
+  };
+
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Button
@@ -93,6 +115,15 @@ const CourseFiles = () => {
         sx={{ mb: 2, borderRadius: 2, fontWeight: 600, textTransform: 'none' }}
       >
         Πίσω
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleDownloadAll}
+        disabled={files.length === 0 || downloadingAll}
+        sx={{ mb: 2, ml: 1, borderRadius: 2, fontWeight: 600, textTransform: 'none' }}
+      >
+        {downloadingAll ? 'Δημιουργία zip...' : 'Κατέβασμα όλων σε zip'}
       </Button>
       {course && <Typography variant="h5" color="primary" gutterBottom align="center" sx={{ fontWeight: 700 }}>{course.name} (Εξάμηνο {course.semester})</Typography>}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -112,7 +143,6 @@ const CourseFiles = () => {
             <Box key={file.id} sx={{ background: '#f8fafc', boxShadow: '0 2px 12px 0 rgba(31,38,135,0.08)', borderRadius: '18px', border: '1px solid #e3eafc', p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Typography variant="body2" sx={{ fontWeight: 600 }}>Έτος: <span style={{ fontWeight: 400 }}>{file.year}</span></Typography>
               <Typography variant="body2" sx={{ fontWeight: 600 }}>Εξεταστική: <span style={{ fontWeight: 400 }}>{file.period}</span></Typography>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>Uploader: <span style={{ fontWeight: 400 }}>{uploaders[file.uploader] || file.uploader}</span></Typography>
               <Box sx={{ mt: 1 }}>
                 <Button color="info" size="small" href={file.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3f2fd', borderRadius: 1, '&:hover': { background: '#bbdefb' }, mr: 1 }}><VisibilityIcon /></Button>
                 <Button color="primary" size="small" href={file.file_url} target="_blank" rel="noopener noreferrer" sx={{ textTransform: 'none', background: '#e3eafc', borderRadius: 1, '&:hover': { background: '#c5cae9' }, mr: 1 }}><DownloadIcon /></Button>
@@ -133,7 +163,6 @@ const CourseFiles = () => {
               <TableRow>
                 <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Έτος</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Εξεταστική</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Uploader</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Status</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#1a237e', fontSize: 16 }}>Ενέργειες</TableCell>
               </TableRow>
@@ -143,7 +172,6 @@ const CourseFiles = () => {
                 <TableRow key={file.id}>
                   <TableCell>{file.year}</TableCell>
                   <TableCell>{file.period}</TableCell>
-                  <TableCell>{uploaders[file.uploader] || file.uploader}</TableCell>
                   <TableCell>
                     <Box sx={{
                       bgcolor: file.approved ? 'success.main' : 'warning.main',
