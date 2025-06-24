@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Card, CardContent, Skeleton, Stack, Divider, useTheme, IconButton, Badge, Chip, Tooltip } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Skeleton, Stack, Divider, useTheme, IconButton, Badge, Chip, Tooltip, TextField, MenuItem, InputAdornment } from '@mui/material';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
@@ -16,6 +17,8 @@ const Courses = () => {
   const [favLoading, setFavLoading] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const [search, setSearch] = useState('');
+  const [filterSemester, setFilterSemester] = useState('');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -83,8 +86,13 @@ const Courses = () => {
     setFavLoading(false);
   };
 
-  // Ομαδοποίηση ανά εξάμηνο
-  const grouped = courses.reduce((acc, course) => {
+  // Υπολογισμός φιλτραρισμένων μαθημάτων
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.name.toLowerCase().includes(search.toLowerCase());
+    const matchesSemester = filterSemester ? course.semester === Number(filterSemester) : true;
+    return matchesSearch && matchesSemester;
+  });
+  const grouped = filteredCourses.reduce((acc, course) => {
     acc[course.semester] = acc[course.semester] || [];
     acc[course.semester].push(course);
     return acc;
@@ -95,6 +103,35 @@ const Courses = () => {
       <Typography variant="h4" color="primary" gutterBottom align="center" sx={{ fontWeight: 700, letterSpacing: 1 }}>
         Όλα τα Μαθήματα
       </Typography>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3, mt: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <TextField
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Αναζήτηση μαθήματος..."
+          size="small"
+          sx={{ minWidth: 220 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          select
+          label="Εξάμηνο"
+          value={filterSemester}
+          onChange={e => setFilterSemester(e.target.value)}
+          size="small"
+          sx={{ minWidth: 140 }}
+        >
+          <MenuItem value="">Όλα</MenuItem>
+          {[...Array(8)].map((_, i) => (
+            <MenuItem key={i + 1} value={i + 1}>{i + 1}ο Εξάμηνο</MenuItem>
+          ))}
+        </TextField>
+      </Stack>
       {loading ? (
         <Stack spacing={3}>
           {[1,2,3].map(i => <Skeleton key={i} variant="rounded" height={120} />)}
