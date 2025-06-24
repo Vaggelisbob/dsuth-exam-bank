@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 // Επίσημο Google G logo
 const GoogleLogo = (
@@ -26,6 +27,7 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -42,6 +44,7 @@ const Login = () => {
     if (error) setError(error.message);
     else {
       setMessage('Επιτυχής είσοδος!');
+      enqueueSnackbar('Επιτυχής είσοδος!', { variant: 'success' });
       navigate('/');
     }
     setLoading(false);
@@ -53,6 +56,7 @@ const Login = () => {
     setMessage('');
     try {
       await supabase.auth.signInWithOAuth({ provider: 'google' });
+      enqueueSnackbar('Επιτυχής είσοδος με Google!', { variant: 'success' });
     } catch (err) {
       setError('Σφάλμα με Google login');
     }

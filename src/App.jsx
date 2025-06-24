@@ -15,6 +15,7 @@ import Courses from './pages/Courses';
 import CourseFiles from './pages/CourseFiles';
 import Footer from './components/Footer';
 import Favorites from './pages/Favorites';
+import { SnackbarProvider } from 'notistack';
 
 const theme = createTheme({
   palette: {
@@ -46,26 +47,28 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ overflowX: 'hidden', maxWidth: '100vw', pt: { xs: '56px', md: '64px' } }}>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/admin" element={<AdminDashboard />}>
-            <Route path="files" element={<Suspense fallback={<div>Loading...</div>}><AdminFiles /></Suspense>} />
-            <Route path="users" element={<Suspense fallback={<div>Loading...</div>}><AdminUsers /></Suspense>} />
-            <Route path="courses" element={<AdminCourses />} />
-          </Route>
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/courses/:id" element={<CourseFiles />} />
-        </Routes>
-      </Box>
-      <Footer />
+      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={2500}>
+        <CssBaseline />
+        <Box sx={{ overflowX: 'hidden', maxWidth: '100vw', pt: { xs: '56px', md: '64px' } }}>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/admin" element={<AdminDashboard />}>
+              <Route path="files" element={<Suspense fallback={<div>Loading...</div>}><AdminFiles /></Suspense>} />
+              <Route path="users" element={<Suspense fallback={<div>Loading...</div>}><AdminUsers /></Suspense>} />
+              <Route path="courses" element={<AdminCourses />} />
+            </Route>
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:id" element={<CourseFiles />} />
+          </Routes>
+        </Box>
+        <Footer />
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }
