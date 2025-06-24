@@ -129,7 +129,7 @@ const Login = () => {
           ΣΥΝΔΕΣΗ ΜΕ GOOGLE
         </Button>
         <Divider sx={{ my: 2, width: '100%' }}><Typography sx={{ color: '#888', fontWeight: 500 }}>Ή</Typography></Divider>
-        <Box component="form" sx={{ mt: 0, width: '100%' }}>
+        <Box component="form" sx={{ mt: 0, width: '100%' }} onSubmit={handleSignIn}>
           <Stack spacing={2} direction="column">
             <TextField
               label="Email"
@@ -166,6 +166,7 @@ const Login = () => {
               fullWidth
               sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
               onClick={handleSignIn}
+              type="submit"
               disabled={loading}
             >
               ΕΙΣΟΔΟΣ
