@@ -9,6 +9,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import PeopleIcon from '@mui/icons-material/People';
 import HomeIcon from '@mui/icons-material/Home';
 import BookIcon from '@mui/icons-material/Book';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AdminCourses from './AdminCourses';
 
 const drawerWidth = 220;
@@ -18,6 +19,7 @@ const adminMenu = [
   { text: 'Διαχείριση Αρχείων', icon: <FolderIcon />, path: '/admin/files' },
   { text: 'Διαχείριση Χρηστών', icon: <PeopleIcon />, path: '/admin/users' },
   { text: 'Διαχείριση Μαθημάτων', icon: <BookIcon />, path: '/admin/courses' },
+  { text: 'Μαζικό Upload', icon: <CloudUploadIcon />, path: '/admin/upload' },
 ];
 
 const cardBg = {
