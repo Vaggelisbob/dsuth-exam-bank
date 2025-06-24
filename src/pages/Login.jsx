@@ -3,7 +3,7 @@ import { Container, Typography, Box, Button, TextField, Alert, Stack, IconButton
 import { supabase } from '../supabaseClient';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { validateTurnstileToken } from '../utils/turnstileValidation';
@@ -32,6 +32,7 @@ const Login = () => {
   const [canSubmit, setCanSubmit] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const location = useLocation();
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -61,8 +62,17 @@ const Login = () => {
     
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setError(error.message);
-      enqueueSnackbar(error.message, { variant: 'error' });
+      if (
+        error.message.toLowerCase().includes('email not confirmed') ||
+        error.message.toLowerCase().includes('email has not been confirmed') ||
+        error.message.toLowerCase().includes('confirm your email')
+      ) {
+        setError('Το email σας δεν έχει επιβεβαιωθεί. Ελέγξτε το inbox σας για το email επιβεβαίωσης.');
+        enqueueSnackbar('Το email σας δεν έχει επιβεβαιωθεί. Ελέγξτε το inbox σας για το email επιβεβαίωσης.', { variant: 'warning' });
+      } else {
+        setError(error.message);
+        enqueueSnackbar(error.message, { variant: 'error' });
+      }
     }
     else {
       setMessage('Επιτυχής είσοδος!');
@@ -111,6 +121,11 @@ const Login = () => {
         <Typography variant="h5" color="#222" gutterBottom align={isMobile ? 'center' : 'left'}>
           ΕΙΣΟΔΟΣ
         </Typography>
+        {location.state?.registered && (
+          <Alert severity="success" sx={{ width: '100%', mb: 2 }}>
+            Η εγγραφή ολοκληρώθηκε! Ελέγξτε το email σας για να ενεργοποιήσετε τον λογαριασμό σας.
+          </Alert>
+        )}
         <Button
           variant="outlined"
           fullWidth

@@ -3,10 +3,12 @@ import { Container, Typography, Box, Button, TextField, Alert, Stack, IconButton
 import { supabase } from '../supabaseClient';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { validateTurnstileToken } from '../utils/turnstileValidation';
+import { validatePassword } from '../utils/passwordValidation';
+import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 
 // Επίσημο Google G logo
 const GoogleLogo = (
@@ -31,6 +33,7 @@ const Register = () => {
   const [turnstileToken, setTurnstileToken] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -45,6 +48,15 @@ const Register = () => {
       enqueueSnackbar('Παρακαλώ ολοκληρώστε την επαλήθευση.', { variant: 'error' });
       return;
     }
+
+    // Frontend password validation
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setError('Ο κωδικός δεν πληροί τις απαιτήσεις ασφαλείας.');
+      enqueueSnackbar('Ο κωδικός δεν πληροί τις απαιτήσεις ασφαλείας.', { variant: 'error' });
+      return;
+    }
+
     setLoading(true);
     setError('');
     setMessage('');
@@ -63,8 +75,8 @@ const Register = () => {
       setError(error.message);
       enqueueSnackbar(error.message, { variant: 'error' });
     } else {
-      setMessage('Επιτυχής εγγραφή! Ελέγξτε το email σας.');
-      enqueueSnackbar('Επιτυχής εγγραφή! Ελέγξτε το email σας.', { variant: 'success' });
+      navigate('/login', { state: { registered: true, email } });
+      return;
     }
     setLoading(false);
   };
@@ -172,6 +184,7 @@ const Register = () => {
                 ),
               }}
             />
+            <PasswordStrengthIndicator password={password} />
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
               <Turnstile
                 siteKey="0x4AAAAAABiQtKNjlTVw7zFL"
@@ -200,7 +213,7 @@ const Register = () => {
               sx={{ fontSize: isMobile ? '1.1rem' : '1rem', py: isMobile ? 2 : 1 }}
               onClick={handleSignUp}
               type="submit"
-              disabled={loading || !canSubmit}
+              disabled={loading || !canSubmit || !validatePassword(password).isValid}
             >
               ΕΓΓΡΑΦΗ
             </Button>
