@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Card, CardContent, Skeleton, Stack, Divider, useTheme, IconButton, Badge, Chip, Tooltip } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Skeleton, Stack, Divider, useTheme, IconButton, Badge, Chip, Tooltip, Alert, Button } from '@mui/material';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -68,6 +68,30 @@ const Favorites = () => {
     acc[course.semester].push(course);
     return acc;
   }, {});
+
+  if (!user) {
+    return (
+      <Container maxWidth="sm" sx={{ mt: 8, mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', maxWidth: 420, mt: 6 }}>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h5" align="center" color="primary" fontWeight={700}>
+              Αγαπημένα
+            </Typography>
+          </Box>
+          <Box sx={{ width: '100%' }}>
+            <Box sx={{ mb: 2 }}>
+              <Alert severity="info" sx={{ fontSize: 17, fontWeight: 500, textAlign: 'center', mb: 2 }}>
+                Για να δείτε τα αγαπημένα σας μαθήματα, πρέπει να συνδεθείτε.
+              </Alert>
+              <Button variant="contained" color="primary" fullWidth sx={{ fontWeight: 700, fontSize: 17 }} onClick={() => navigate('/login')}>
+                Σύνδεση
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
