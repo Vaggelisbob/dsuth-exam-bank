@@ -13,6 +13,24 @@ const periods = [
   'Σεπτέμβριος',
 ];
 
+// Helper για μετατροπή ελληνικών σε λατινικούς χαρακτήρες
+function greekToLatin(str) {
+  const map = {
+    'Α': 'A', 'Β': 'V', 'Γ': 'G', 'Δ': 'D', 'Ε': 'E', 'Ζ': 'Z', 'Η': 'I', 'Θ': 'Th',
+    'Ι': 'I', 'Κ': 'K', 'Λ': 'L', 'Μ': 'M', 'Ν': 'N', 'Ξ': 'X', 'Ο': 'O', 'Π': 'P',
+    'Ρ': 'R', 'Σ': 'S', 'Τ': 'T', 'Υ': 'Y', 'Φ': 'F', 'Χ': 'Ch', 'Ψ': 'Ps', 'Ω': 'O',
+    'ά': 'a', 'έ': 'e', 'ή': 'i', 'ί': 'i', 'ό': 'o', 'ύ': 'y', 'ώ': 'o', 'ς': 's',
+    'ϊ': 'i', 'ΰ': 'y', 'ϋ': 'y', 'ΐ': 'i',
+    'α': 'a', 'β': 'v', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'i', 'θ': 'th',
+    'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o', 'π': 'p',
+    'ρ': 'r', 'σ': 's', 'τ': 't', 'υ': 'y', 'φ': 'f', 'χ': 'ch', 'ψ': 'ps', 'ω': 'o',
+    'Ά': 'A', 'Έ': 'E', 'Ή': 'I', 'Ί': 'I', 'Ό': 'O', 'Ύ': 'Y', 'Ώ': 'O', 'Ϊ': 'I', 'Ϋ': 'Y',
+  };
+  return str.split('').map(l => map[l] || l).join('')
+    .replace(/[^a-zA-Z0-9]/g, '') // Αφαίρεση ειδικών χαρακτήρων
+    .replace(/\s+/g, ''); // Αφαίρεση κενών
+}
+
 const Upload = () => {
   const [user, setUser] = useState(undefined);
   const [title, setTitle] = useState('');
@@ -83,10 +101,31 @@ const Upload = () => {
       return;
     }
     setLoading(true);
-    // 1. Ανεβάζουμε το αρχείο στο Supabase Storage
+    // Δημιουργία νέου ονόματος αρχείου
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}_${user.id}.${fileExt}`;
-    const { data: storageData, error: storageError } = await supabase.storage.from('exams').upload(fileName, file);
+    const courseLatin = greekToLatin(course);
+    const periodLatin = greekToLatin(period);
+    let baseFileName = `${courseLatin}_${year}_${periodLatin}_Themata`;
+    let fileName = `${baseFileName}.${fileExt}`;
+    let counter = 1;
+    // Έλεγχος αν υπάρχει ήδη αρχείο με το ίδιο όνομα στο storage
+    while (true) {
+      const { data: existsData, error: existsError } = await supabase.storage.from('exams').list('', { search: fileName });
+      if (existsError || !existsData || existsData.length === 0) break;
+      // Αν υπάρχει, αύξησε τον αριθμό
+      fileName = `${baseFileName}_${counter}.${fileExt}`;
+      counter++;
+    }
+    // Δημιουργία νέου File αντικειμένου με το νέο όνομα
+    let renamedFile;
+    try {
+      renamedFile = new File([file], fileName, { type: file.type });
+    } catch (err) {
+      // Fallback για παλαιότερα browsers
+      renamedFile = file;
+    }
+    // 1. Ανεβάζουμε το αρχείο στο Supabase Storage
+    const { data: storageData, error: storageError } = await supabase.storage.from('exams').upload(fileName, renamedFile);
     if (storageError) {
       setError('Σφάλμα στο ανέβασμα αρχείου: ' + storageError.message);
       setLoading(false);
