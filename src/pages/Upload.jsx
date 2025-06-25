@@ -150,6 +150,7 @@ const Upload = () => {
       return;
     }
     setSuccess('Το αρχείο ανέβηκε με επιτυχία!');
+    enqueueSnackbar('Το αρχείο ανέβηκε με επιτυχία!', { variant: 'success' });
     setCourse('');
     setYear('');
     setPeriod('');
@@ -318,8 +319,6 @@ const Upload = () => {
                   size="normal"
                 />
               </Box>
-              {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-              {success && <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>}
               <Box sx={{ mt: 2, position: 'relative' }}>
                 <Button
                   type="submit"
